@@ -60,7 +60,7 @@ class PublicController extends Controller
         $activeSession = Session::where('session_name', 'Summer 2027')->first();
 
         // Fetch subjects data for Summer 2027
-        $subjectsData = OfferedSubject::select('examboard as examBoard', 'qualification as courseType', 'description as subjectName', 'code as subjectCode', 'session')
+        $subjectsData = OfferedSubject::select('examboard as examBoard', 'qualification as courseType', 'description as subjectName', 'code as subjectCode', 'session', 'amount')
             ->whereIn('session', ['Summer 2027'])
             ->orderBy('examboard')
             ->orderBy('qualification')
@@ -74,6 +74,20 @@ class PublicController extends Controller
             'subjectsBySession' => $subjectsData->map(function ($sessionSubjects) {
                 return [
                     'boards' => $sessionSubjects->pluck('examBoard')->unique()->values(),
+                    'qualifications' => $sessionSubjects->pluck('courseType')->unique()->values(),
+                    'boardsByQualification' => $sessionSubjects->groupBy('courseType')->map(function ($items) {
+                        return $items->pluck('examBoard')->unique()->values();
+                    }),
+                    'subjectsByQualificationAndBoard' => $sessionSubjects->groupBy(['courseType', 'examBoard'])->map(function ($boards) {
+                        return $boards->map(function ($subjects) {
+                            return $subjects->mapWithKeys(function ($item) {
+                                return [$item->subjectName => [
+                                    'code' => $item->subjectCode,
+                                    'amount' => $item->amount,
+                                ]];
+                            });
+                        });
+                    }),
                     'courseTypesByBoard' => $sessionSubjects->groupBy('examBoard')->map(function ($items) {
                         return $items->pluck('courseType')->unique()->values();
                     }),
@@ -93,6 +107,21 @@ class PublicController extends Controller
 
   public function submitStudent(Request $request)
     {
+        $request->validate([
+            'session' => 'required|string',
+            'examBoard' => 'required|array|min:1',
+            'examBoard.*' => 'required|string',
+            'courseType' => 'required|array|min:1',
+            'courseType.*' => 'required|string',
+            'subjectName' => 'required|array|min:1',
+            'subjectName.*' => 'required|string',
+            'subjectCode' => 'required|array|min:1',
+            'subjectCode.*' => 'required|string',
+            'tire' => 'required|array|min:1',
+            'tire.*' => 'required|string',
+            'nea' => 'required|array|min:1',
+            'nea.*' => 'required|string',
+        ]);
         // dd($request->all());
         $activeSession = Session::where('status', 'active')->first();
         $basePath = public_path('studentDocs');

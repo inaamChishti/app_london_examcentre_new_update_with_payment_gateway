@@ -18,10 +18,67 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('layouts.adminDashboard.style')
+
+<style>
+.lec-booking{margin:26px 0 32px;color:#142d50;font-family:Nunito,Arial,sans-serif}
+.lec-booking-hero{padding:24px 28px;color:#fff;border-radius:16px 16px 0 0;background:linear-gradient(110deg,#1556a1 0%,#286eb8 62%,#174b8c 100%);position:relative;overflow:hidden}
+.lec-booking-hero h2{margin:0 0 6px;font-size:clamp(22px,3vw,30px);font-weight:800;color:#fff}
+.lec-booking-hero p{margin:0;color:#eaf3ff;font-size:14px}
+.lec-booking-grid{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(290px,.92fr);gap:18px;padding:18px;background:#f4f7fb;border:1px solid #e1e9f4;border-top:0;border-radius:0 0 16px 16px;align-items:start}
+.lec-select-panel,.lec-basket-panel{background:#fff;border:1px solid #e0e8f2;border-radius:15px;box-shadow:0 5px 18px rgba(23,61,105,.07)}
+.lec-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 19px;border-bottom:1px solid #e9eef5}
+.lec-panel-heading h3{margin:0;color:#15365f;font-size:18px;font-weight:800}
+.lec-panel-heading .lec-icon{color:#1d63aa;font-size:20px;margin-right:9px}
+.lec-select-body{padding:18px}
+.lec-field-label{display:block;margin:0 0 7px;color:#25466e;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.45px}
+.lec-field{width:100%;min-height:45px;padding:10px 13px;border:1px solid #ccd8e7;border-radius:9px;background:#fff;color:#18385f;font-size:14px;font-weight:700}
+.lec-field:focus{outline:none;border-color:#2c70b8;box-shadow:0 0 0 3px rgba(44,112,184,.12)}
+.lec-field-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.lec-current-subject{margin-top:16px;padding:16px;border:1px solid #d7e5f6;border-radius:12px;background:linear-gradient(110deg,#f1f6ff,#e8f1ff)}
+.lec-current-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.lec-current-title{font-size:17px;font-weight:800;color:#173c6c}
+.lec-current-price{font-size:23px;font-weight:900;color:#153d70;white-space:nowrap}
+.lec-current-meta{margin-top:3px;font-size:12px;color:#536a84}
+.lec-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.lec-option-block{min-width:0}
+.lec-option-title{margin:0 0 8px;color:#193c68;font-size:13px;font-weight:800}
+.lec-choice{display:flex;align-items:flex-start;gap:9px;padding:10px 11px;margin:6px 0;min-height:42px;border:1px solid #d9e1ec;border-radius:9px;cursor:pointer;background:#fff;color:#304964;font-size:12px}
+.lec-choice:has(input:checked){border-color:#3676b9;background:#edf5ff;color:#153d70;box-shadow:inset 0 0 0 1px #3676b9}
+.lec-choice input{margin-top:2px;accent-color:#2165a9}
+.lec-info{margin-top:12px;padding:10px 12px;border-radius:9px;background:#edf4fc;color:#395a7d;font-size:11px;line-height:1.5}
+.lec-add-row{display:flex;align-items:center;justify-content:flex-end;gap:15px;margin-top:15px;padding-top:14px;border-top:1px solid #d8e5f5}
+.lec-add-row strong{color:#153d70;font-size:24px}
+.lec-add-btn,.lec-continue-btn{border:0;border-radius:9px;padding:12px 18px;color:#fff;background:#1e60a7;font-weight:800;font-size:13px;cursor:pointer;transition:.2s}
+.lec-add-btn:hover,.lec-continue-btn:hover{background:#164c88;transform:translateY(-1px)}
+.lec-basket-count{padding:5px 10px;border-radius:20px;background:#e8f0fb;color:#194b82;font-size:11px;font-weight:800;white-space:nowrap}
+.lec-basket-body{padding:12px 15px 16px}
+.lec-basket-empty{padding:26px 12px;text-align:center;color:#71839a;font-size:13px}
+.lec-basket-empty i{display:block;margin-bottom:9px;font-size:27px;color:#8da8c8}
+.lec-basket-item{position:relative;padding:12px 36px 12px 10px;border-bottom:1px solid #e9eef5}
+.lec-basket-item:last-child{border-bottom:0}
+.lec-basket-item h4{margin:0 0 3px;color:#173b67;font-size:13px;font-weight:800}
+.lec-basket-item .lec-item-meta{color:#657b95;font-size:11px}
+.lec-basket-item .lec-item-options{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.lec-item-pill{padding:4px 7px;border-radius:6px;background:#eef2f7;color:#4a6079;font-size:10px;font-weight:700}
+.lec-item-price{float:right;margin-left:8px;color:#173b67;font-size:13px;font-weight:900}
+.lec-remove-item{position:absolute;top:11px;right:2px;border:0;background:transparent;color:#6b7d91;font-size:15px;cursor:pointer}
+.lec-remove-item:hover{color:#c0392b}
+.lec-basket-total{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:9px 0 13px;padding:13px 12px;border-radius:10px;background:#e8f1ff;color:#183e70;font-weight:800}
+.lec-basket-total strong{font-size:22px;white-space:nowrap}
+.lec-basket-note{margin:0 0 12px;color:#687e96;font-size:10px;line-height:1.5}
+.lec-continue-btn{display:block;width:100%;padding:13px 15px}
+.lec-feature-strip{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;padding:15px 8px 4px;color:#274c75;font-size:11px;font-weight:800}
+.lec-feature-strip span{display:flex;align-items:center;gap:7px}
+.lec-feature-strip i{color:#2869ad;font-size:17px}
+#candidate-details{scroll-margin-top:24px}
+@media(max-width:850px){.lec-booking-grid{grid-template-columns:1fr}.lec-field-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.lec-booking-hero{padding:19px 17px}.lec-booking-grid{padding:10px}.lec-select-body{padding:13px}.lec-option-grid{grid-template-columns:1fr}.lec-current-top{align-items:flex-start;flex-direction:column;gap:4px}.lec-add-row{align-items:stretch;flex-direction:column}.lec-add-row strong{text-align:right}.lec-add-btn{width:100%}.lec-feature-strip{justify-content:flex-start;padding-left:14px}}
+</style>
+
 </head>
 <div class="container-fluid" style="padding: 20px;">
     <div class=""
-        style="max-width: 900px; margin: 0 auto; background: #fff; border-radius: 8px; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);">
+        style="max-width: 1240px; margin: 0 auto; background: #fff; border-radius: 8px; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);">
         <div class="mainHeadning"
             style="padding: 15px 20px; background: #F87A14; border-radius: 8px 8px 0 0; border-bottom: 4px solid #1976D2; display: flex; align-items: center;">
             <i class="fas fa-user-graduate fa-2x "
@@ -104,6 +161,15 @@
                             @endforeach
                         </select>
                     </div>
+                </div>
+
+
+
+                    <div id="candidate-details" style="margin:10px 0 18px;">
+                        <h4 style="margin:0;color:#183d69;font-size:18px;font-weight:800;"><i class="fas fa-user-edit" style="margin-right:8px;color:#2869ad;"></i>Candidate details</h4>
+                        <p style="margin:4px 0 0;color:#6b7e94;font-size:12px;">Enter the candidate's details to continue with registration.</p>
+                    </div>
+                    <div class="row">
                     <div class="col-md-4" style="margin-bottom: 25px;">
                         <div style="display: flex; align-items: center; margin-bottom: 8px;">
                             <i class="fas fa-user sessionFAS"
@@ -408,12 +474,68 @@
                     </select>
                 </div>
 
+<section class="lec-booking" aria-label="Exam selection and basket">
+                        <div class="lec-booking-hero">
+                            <h2><i class="fas fa-graduation-cap" style="margin-right:10px;"></i>Find and book your exams</h2>
+                            <p>Search subjects by qualification, exam board or subject code. Add exams to your basket as you go.</p>
+                        </div>
+                        <div class="lec-booking-grid">
+                            <div class="lec-select-panel">
+                                <div class="lec-panel-heading"><h3><i class="fas fa-search lec-icon"></i>Choose your exam</h3></div>
+                                <div class="lec-select-body">
+                                    <div class="lec-field-grid">
+                                        <div><label class="lec-field-label" for="lecBoard">Exam board</label><select id="lecBoard" class="lec-field" disabled><option value="">Select board</option></select></div>
+                                        <div><label class="lec-field-label" for="lecQualification">Qualification</label><select id="lecQualification" class="lec-field" disabled><option value="">Select qualification</option></select></div>
+                                        <div><label class="lec-field-label" for="lecSubject">Subject</label><select id="lecSubject" class="lec-field" disabled><option value="">Select subject</option></select></div>
+                                        <div><label class="lec-field-label" for="lecSubjectCode">Subject Code</label><select id="lecSubjectCode" class="lec-field" disabled><option value="">Select subject code</option></select></div>
+                                        <div><label class="lec-field-label" for="lecOptionCode">Option Code</label><select id="lecOptionCode" class="lec-field" disabled><option value="">Select option code</option></select></div>
+                                    </div>
+                                    <div class="lec-current-subject">
+                                        <div class="lec-current-top">
+                                            <div><div class="lec-current-title" id="lecSelectedTitle">Select a subject to view details</div><div class="lec-current-meta" id="lecSelectedMeta">Qualification, board and subject code will appear here</div></div>
+                                            <div class="lec-current-price" id="lecSelectedPrice">—</div>
+                                        </div>
+                                        <div class="lec-option-grid">
+                                            <div class="lec-option-block">
+                                                <p class="lec-option-title"><i class="fas fa-layer-group"></i> Tier</p>
+                                                <label class="lec-choice"><input type="radio" name="lecTier" value="N/A" checked> N/A (Not tiered)</label>
+                                                <label class="lec-choice"><input type="radio" name="lecTier" value="Higher Tier"> Higher tier</label>
+                                                <label class="lec-choice"><input type="radio" name="lecTier" value="Foundation Tier"> Foundation tier</label>
+                                            </div>
+                                            <div class="lec-option-block">
+                                                <p class="lec-option-title"><i class="fas fa-file-alt"></i> NEA (Non-Exam Assessment)</p>
+                                                <label class="lec-choice"><input type="radio" name="lecNea" value="N/A" checked> Not applicable</label>
+                                                <label class="lec-choice"><input type="radio" name="lecNea" value="Carry Forward"> Carry forward existing NEA</label>
+                                                <label class="lec-choice"><input type="radio" name="lecNea" value="Frobel's NEA"> Frobel's NEA support</label>
+                                            </div>
+                                        </div>
+                                        <div class="lec-info" id="lecOptionInfo"><i class="fas fa-info-circle"></i> Carry forward is only available where a candidate has an eligible, previously approved NEA. Frobel's NEA support and any additional fee are subject to centre confirmation.</div>
+                                        <div class="lec-add-row"><strong id="lecAddPrice">—</strong><button type="button" class="lec-add-btn" id="lecAddToBasket"><i class="fas fa-shopping-cart" style="margin-right:7px;"></i>Add to basket</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <aside class="lec-basket-panel">
+                                <div class="lec-panel-heading"><h3><i class="fas fa-shopping-cart lec-icon"></i>Your exam basket</h3><span class="lec-basket-count" id="lecBasketCount">0 subjects</span></div>
+                                <div class="lec-basket-body">
+                                    <div id="lecBasketItems"><div class="lec-basket-empty"><i class="fas fa-shopping-basket"></i>Your basket is empty.<br>Choose an exam and select Add to basket.</div></div>
+                                    <div class="lec-basket-total"><span id="lecBasketTotalLabel">Total (0 subjects)</span><strong id="lecBasketTotal">£0.00</strong></div>
+                                    <p class="lec-basket-note">Prices shown are taken from the exam-centre fee records. Where a fee or NEA charge has not been configured, it will be marked as to be confirmed before payment.</p>
+                                    <button type="button" class="lec-continue-btn" id="lecContinueRegistration">Continue to registration <i class="fas fa-arrow-right" style="margin-left:8px;"></i></button>
+                                </div>
+                            </aside>
+                        </div>
+                        <div class="lec-feature-strip">
+                            <span><i class="fas fa-check-circle"></i>Multiple qualifications</span><span><i class="fas fa-layer-group"></i>Optional tier selection</span><span><i class="fas fa-file-alt"></i>NEA options</span><span><i class="fas fa-pound-sign"></i>Transparent pricing</span><span><i class="fas fa-shield-alt"></i>Secure online payment</span>
+                        </div>
+                        <div id="lecBasketInputs" style="display:none;"></div>
+                    </section>
+
                 <!-- Exam Table -->
                 {{-- <div style="margin-bottom: 25px;">
                     <div style="display: flex; align-items: center; margin-bottom: 8px;">
                         <i class="fas fa-table sessionFAS"
                             style="color: #e67e22; margin-right: 10px; font-size: 1.2rem;"></i>
-                        <label style="font-weight: 600; color: #2c3e50;">Exam Details</label>
+                        <label style="font-weight: 600; color: #2c3e50;">Subject Code</label>
                     </div>
                     <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
                         <thead>
@@ -516,117 +638,6 @@
                     </table>
                     <div class="appendSec" style="margin-top: 15px;"></div>
                 </div> --}}
-
-                <!-- Exam Table -->
-                <div style="margin-bottom: 25px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                        <i class="fas fa-table sessionFAS"
-                            style="color: #e67e22; margin-right: 10px; font-size: 1.2rem;"></i>
-                        <label style="font-weight: 600; color: #2c3e50;">Exam Details</label>
-                    </div>
-                    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
-                        <thead>
-                            <tr style="background: #f0f8ff;">
-                                <th
-                                    style="text-align: center; font-size: 13px; border: 1px solid #b0e0e6; padding: 10px; width: 14%;">
-                                    Exam Board</th>
-                                <th
-                                    style="text-align: center; font-size: 13px; border: 1px solid #b0e0e6; padding: 10px; width: 15%;">
-                                    Course Type</th>
-                                <th
-                                    style="text-align: center; font-size: 13px; border: 1px solid #b0e0e6; padding: 10px; width: 16%;">
-                                    Subject Name</th>
-                                <th
-                                    style="text-align: center; font-size: 13px; border: 1px solid #b0e0e6; padding: 10px; width: 14%;">
-                                    Subject Code</th>
-                                <th
-                                    style="text-align: center; font-size: 13px; border: 1px solid #b0e0e6; padding: 10px; width: 14%;">
-                                    Tier</th>
-                                <th
-                                    style="text-align: center; font-size: 13px; border: 1px solid #b0e0e6; padding: 10px; width: 14%;">
-                                    NEA</th>
-                                <th
-                                    style="text-align: center; font-size: 13px; border: 1px solid #b0e0e6; padding: 10px; width: 16%;">
-                                    Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="mainsec" style="background: #ffffff; border: 1px solid #b0e0e6;">
-                                <!-- Board Dropdown -->
-                                <td>
-                                    <select class="form-select exam-board" name="examBoard[]"
-                                        onchange="updateCourseTypes(this)">
-                                        <option value="" disabled selected>Board</option>
-                                        @if (isset($subjectsBySession[$activeSession->session_name]['boards']))
-                                            @foreach ($subjectsBySession[$activeSession->session_name]['boards'] as $board)
-                                                @if (!($activeSession->session_name === 'Autumn 2026' && $board === 'CIE'))
-                                                    <option value="{{ $board }}">{{ $board }}</option>
-                                                @endif
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </td>
-
-                                <!-- Course Type Dropdown -->
-                                <td>
-                                    <select class="form-select course-type" name="courseType[]"
-                                        onchange="updateSubjects(this)">
-                                        <option value="" disabled selected>Course Type</option>
-                                    </select>
-                                </td>
-
-                                <!-- Subject Name Dropdown -->
-                                <td>
-                                    <select class="form-select subject-name" name="subjectName[]">
-                                        <option value="" disabled selected>Subject Name</option>
-                                    </select>
-                                </td>
-
-                                <!-- Subject Code Input (Readonly) -->
-                                <td>
-                                    <input type="text" class="form-control subject-code" name="subjectCode[]"
-                                        readonly
-                                        style="width: 100%; padding: 8px; border: 1px solid #b0e0e6; border-radius: 4px; background-color: #f0f8ff;"
-                                        onfocus="this.style.borderColor='#57afbf'; this.style.boxShadow='0 0 0 0.2rem rgba(87, 175, 191, 0.25)'"
-                                        onblur="this.style.borderColor='#b0e0e6'; this.style.boxShadow='none'">
-                                </td>
-
-                                <!-- Tier Dropdown -->
-                                <td style="padding: 8px; vertical-align: middle; height: 50px; text-align: center;">
-                                    <select class="form-select tire" name="tire[]"
-                                        style="width: 100%; padding: 8px; border: 1px solid #b0e0e6; border-radius: 4px; background-color: #f0f8ff;"
-                                        onfocus="this.style.borderColor='#57afbf'; this.style.boxShadow='0 0 0 0.2rem rgba(87, 175, 191, 0.25)'"
-                                        onblur="this.style.borderColor='#b0e0e6'; this.style.boxShadow='none'">
-                                        <option value="N/A">N/A</option>
-                                        <option value="Foundation Tier">Foundation Tier</option>
-                                        <option value="Higher Tier">Higher Tier</option>
-                                    </select>
-                                </td>
-
-                                <!-- NEA Dropdown -->
-                                <td style="padding: 8px; vertical-align: middle; height: 50px; text-align: center;">
-                                    <select class="form-select nea" name="nea[]"
-                                        style="width: 100%; padding: 8px; border: 1px solid #b0e0e6; border-radius: 4px; background-color: #f0f8ff;"
-                                        onfocus="this.style.borderColor='#57afbf'; this.style.boxShadow='0 0 0 0.2rem rgba(87, 175, 191, 0.25)'"
-                                        onblur="this.style.borderColor='#b0e0e6'; this.style.boxShadow='none'">
-                                        <option value="N/A">N/A</option>
-                                        <option value="course work">Course Work</option>
-                                        <option value="language">Speaking Exam</option>
-                                    </select>
-                                </td>
-
-                                <!-- Action Button -->
-                                <td style="padding: 8px; vertical-align: middle; height: 50px; text-align: center;">
-                                    <button class="btn btn-primary add-row-button mainHeadning"
-                                        style="width: 100%; font-size: 11px; background-color: #57afbfd6; border: none; padding: 8px; color: white;"
-                                        type="button"><i class="fas fa-plus"
-                                            style="margin-right: 5px;"></i>Add</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="appendSec" style="margin-top: 15px;"></div>
-                </div>
 
                 <!-- File Uploads -->
                 <div style="margin-bottom: 25px;">
@@ -1227,206 +1238,210 @@
             console.log('Form submission blocked. Only .submitNow click should trigger submission.');
         });
 
-        // Data from PHP
+
+        // Qualification, board and subject data supplied by the controller.
         const subjectsBySession = @json($subjectsBySession);
-        let isRowAdded = false;
+                let sessionData = {};
+        const sessionSelect = document.getElementById('session');
+        const qualificationSelect = document.getElementById('lecQualification');
+        const boardSelect = document.getElementById('lecBoard');
+        const subjectSelect = document.getElementById('lecSubject');
+        const subjectCodeSelect = document.getElementById('lecSubjectCode');
+        const basket = [];
+        const basketItems = document.getElementById('lecBasketItems');
+        const basketInputs = document.getElementById('lecBasketInputs');
 
-        // Update exam details based on session change
-        $('#session').on('change', function() {
-            const selectedSession = $(this).val();
-            const sessionData = subjectsBySession[selectedSession] || {
-                boards: [],
-                courseTypesByBoard: {},
-                subjectsByBoardAndCourse: {}
-            };
-
-            // Reset the main row
-            const mainRow = $('.mainsec');
-            const boardSelect = mainRow.find('.exam-board');
-            const courseTypeSelect = mainRow.find('.course-type');
-            const subjectSelect = mainRow.find('.subject-name');
-            const codeInput = mainRow.find('.subject-code');
-
-            // Clear existing options
-            boardSelect.html('<option value="" disabled selected>Board</option>');
-            courseTypeSelect.html('<option value="" disabled selected>Course Type</option>');
-            subjectSelect.html('<option value="" disabled selected>Subject Name</option>');
-            codeInput.val('');
-
-            // Populate boards for selected session
-            if (sessionData.boards) {
-                sessionData.boards.forEach(board => {
-                    // Hide CIE when Autumn 2026 is selected
-                    if (selectedSession === 'Autumn 2026' && board === 'CIE') return;
-                    boardSelect.append(new Option(board, board));
-                });
-            }
-
-            // Clear appended rows
-            $('.appendSec').empty();
-            isRowAdded = false;
-        });
-
-        // Update course types based on selected board
-        function updateCourseTypes(selectElement) {
-            const board = selectElement.value;
-            const row = selectElement.closest('tr');
-            const courseTypeSelect = row.querySelector('.course-type');
-            const subjectSelect = row.querySelector('.subject-name');
-            const codeInput = row.querySelector('.subject-code');
-            const selectedSession = $('#session').val();
-            const sessionData = subjectsBySession[selectedSession] || {};
-
-            // Reset dependent fields
-            courseTypeSelect.innerHTML = '<option value="" disabled selected>Course Type</option>';
-            subjectSelect.innerHTML = '<option value="" disabled selected>Subject Name</option>';
-            codeInput.value = '';
-
-            // Populate course types
-            if (board && sessionData.courseTypesByBoard && sessionData.courseTypesByBoard[board]) {
-                sessionData.courseTypesByBoard[board].forEach(courseType => {
-                    courseTypeSelect.add(new Option(courseType, courseType));
-                });
-            }
+        function resetSelect(select, placeholder) {
+            select.innerHTML = '';
+            const option = new Option(placeholder, '');
+            option.disabled = true;
+            option.selected = true;
+            select.add(option);
         }
 
-        // Update subjects based on selected course type
-        function updateSubjects(selectElement) {
-            const board = selectElement.closest('tr').querySelector('.exam-board').value;
-            const courseType = selectElement.value;
-            const subjectSelect = selectElement.closest('tr').querySelector('.subject-name');
-            const codeInput = selectElement.closest('tr').querySelector('.subject-code');
-            const selectedSession = $('#session').val();
-            const sessionData = subjectsBySession[selectedSession] || {};
+        function loadSessionOptions() {
+            sessionData = subjectsBySession[sessionSelect.value] || {};
+            [boardSelect, qualificationSelect, subjectSelect, subjectCodeSelect].forEach((select, index) => {
+                resetSelect(select, ['Select board', 'Select qualification', 'Select subject', 'Select subject code'][index]);
+            });
+            boardSelect.disabled = !sessionSelect.value;
+            qualificationSelect.disabled = true;
+            subjectSelect.disabled = true;
+            subjectCodeSelect.disabled = true;
+            const boards = [...new Set(Object.values(sessionData.boardsByQualification || {}).flat())].sort();
+            boards.forEach(board => boardSelect.add(new Option(board, board)));
+            updateSelectedSubject();
+        }
 
-            // Reset subjects and code
-            subjectSelect.innerHTML = '<option value="" disabled selected>Subject Name</option>';
-            codeInput.value = '';
+        sessionSelect.addEventListener('change', loadSessionOptions);
+        loadSessionOptions();
 
-            // Populate subjects
-            if (board && courseType && sessionData.subjectsByBoardAndCourse?.[board]?.[courseType]) {
-                Object.entries(sessionData.subjectsByBoardAndCourse[board][courseType]).forEach(([name,
-                    code]) => {
-                        const option = new Option(name, name);
-                        option.dataset.code = code;
-                        subjectSelect.add(option);
-                    });
+        boardSelect.addEventListener('change', function () {
+            resetSelect(qualificationSelect, 'Select qualification');
+            resetSelect(subjectSelect, 'Select subject');
+            resetSelect(subjectCodeSelect, 'Select subject code');
+            const qualifications = Object.keys(sessionData.boardsByQualification || {})
+                .filter(qualification => (sessionData.boardsByQualification[qualification] || []).includes(this.value));
+            qualifications.forEach(qualification => qualificationSelect.add(new Option(qualification, qualification)));
+            qualificationSelect.disabled = !this.value || qualifications.length === 0;
+            subjectSelect.disabled = true;
+            subjectCodeSelect.disabled = true;
+            updateSelectedSubject();
+        });
+
+        qualificationSelect.addEventListener('change', function () {
+            resetSelect(subjectSelect, 'Select subject');
+            resetSelect(subjectCodeSelect, 'Select subject code');
+            const subjects = sessionData.subjectsByQualificationAndBoard?.[this.value]?.[boardSelect.value] || {};
+            Object.keys(subjects).forEach(subject => {
+                subjectSelect.add(new Option(subject, subject));
+                const code = subjects[subject]?.code;
+                if (code !== null && code !== undefined && String(code).trim() !== '') {
+                    subjectCodeSelect.add(new Option(String(code), String(code)));
+                }
+            });
+            subjectSelect.disabled = !this.value;
+            subjectCodeSelect.disabled = !this.value || subjectCodeSelect.options.length <= 1;
+            updateSelectedSubject();
+        });
+
+        subjectSelect.addEventListener('change', function () {
+            const details = sessionData.subjectsByQualificationAndBoard?.[qualificationSelect.value]?.[boardSelect.value]?.[this.value];
+            subjectCodeSelect.value = details?.code ? String(details.code) : '';
+            updateSelectedSubject();
+        });
+
+        subjectCodeSelect.addEventListener('change', function () {
+            const subjects = sessionData.subjectsByQualificationAndBoard?.[qualificationSelect.value]?.[boardSelect.value] || {};
+            const match = Object.keys(subjects).find(subject => String(subjects[subject]?.code ?? '') === this.value);
+            if (match) subjectSelect.value = match;
+            updateSelectedSubject();
+        });document.querySelectorAll('input[name="lecTier"], input[name="lecNea"]').forEach(input => input.addEventListener('change', updateSelectedSubject));
+
+        function getSelectedDetails() {
+            const qualification = qualificationSelect.value;
+            const board = boardSelect.value;
+            const subject = subjectSelect.value;
+            const details = sessionData.subjectsByQualificationAndBoard?.[qualification]?.[board]?.[subject];
+            return details ? { qualification, board, subject, code: details.code, amount: details.amount } : null;
+        }
+
+        function money(value) {
+            return '£' + Number(value).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function updateSelectedSubject() {
+            const item = getSelectedDetails();
+            const tier = document.querySelector('input[name="lecTier"]:checked')?.value || 'N/A';
+            const nea = document.querySelector('input[name="lecNea"]:checked')?.value || 'N/A';
+            const title = document.getElementById('lecSelectedTitle');
+            const meta = document.getElementById('lecSelectedMeta');
+            const price = document.getElementById('lecSelectedPrice');
+            const addPrice = document.getElementById('lecAddPrice');
+            if (!item) {
+                title.textContent = 'Select a subject to view details';
+                meta.textContent = 'Qualification, board and subject code will appear here';
+                price.textContent = '—';
+                addPrice.textContent = '—';
+                return;
             }
+            title.textContent = item.qualification + ' ' + item.subject;
+            meta.textContent = item.board + '  |  ' + item.code + (tier !== 'N/A' ? '  |  ' + tier : '');
+            const basePrice = item.amount !== null && item.amount !== '' ? Number(item.amount) : null;
+            const displayPrice = basePrice === null || !Number.isFinite(basePrice) ? 'Price TBC' : money(basePrice);
+            price.textContent = displayPrice;
+            addPrice.textContent = displayPrice + (nea === "Frobel's NEA" ? ' + NEA fee TBC' : '');
+            document.getElementById('lecOptionInfo').textContent = nea === "Frobel's NEA"
+                ? "Frobel's NEA support selected. The additional NEA fee must be confirmed by the Exams Office before payment."
+                : "Carry forward is only available where a candidate has an eligible, previously approved NEA. Frobel's NEA support and any additional fee are subject to centre confirmation.";
+        }
 
-            // Update subject code when subject is selected
-            subjectSelect.addEventListener('change', function() {
-                const selectedOption = this.options[this.selectedIndex];
-                codeInput.value = selectedOption?.dataset?.code || '';
+        function escapeBasketText(value) {
+            return String(value ?? '').replace(/[&<>"']/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[character]));
+        }
+
+        function renderBasket() {
+            basketItems.innerHTML = '';
+            if (!basket.length) {
+                basketItems.innerHTML = '<div class="lec-basket-empty"><i class="fas fa-shopping-basket"></i>Your basket is empty.<br>Choose an exam and select Add to basket.</div>';
+            }
+            basket.forEach((item, index) => {
+                const priceText = item.amount === null ? 'Price TBC' : money(item.amount);
+                const extraText = item.nea === "Frobel's NEA" ? ' + NEA fee TBC' : '';
+                const card = document.createElement('div');
+                card.className = 'lec-basket-item';
+                card.innerHTML = '<span class="lec-item-price">' + priceText + extraText + '</span>' +
+                    '<h4>' + escapeBasketText(item.qualification) + ' ' + escapeBasketText(item.subject) + '</h4>' +
+                    '<div class="lec-item-meta">' + escapeBasketText(item.board) + ' · ' + escapeBasketText(item.code) + '</div>' +
+                    '<div class="lec-item-options"><span class="lec-item-pill"><i class="fas fa-layer-group"></i> Tier: ' + escapeBasketText(item.tier) + '</span>' +
+                    '<span class="lec-item-pill"><i class="fas fa-file-alt"></i> NEA: ' + escapeBasketText(item.nea) + '</span></div>' +
+                    '<button type="button" class="lec-remove-item" data-index="' + index + '" aria-label="Remove item"><i class="fas fa-trash-alt"></i></button>';
+                basketItems.appendChild(card);
+            });
+
+            const count = basket.length;
+            document.getElementById('lecBasketCount').textContent = count + (count === 1 ? ' subject' : ' subjects');
+            document.getElementById('lecBasketTotalLabel').textContent = 'Total (' + count + (count === 1 ? ' subject)' : ' subjects)');
+            const hasUnknownBase = basket.some(item => item.amount === null);
+            const hasUnknownNea = basket.some(item => item.nea === "Frobel's NEA");
+            const knownTotal = basket.reduce((sum, item) => sum + (item.amount === null ? 0 : item.amount), 0);
+            let totalText = money(knownTotal);
+            if (hasUnknownBase) totalText = 'Price TBC';
+            else if (hasUnknownNea) totalText += ' + NEA fee TBC';
+            document.getElementById('lecBasketTotal').textContent = count ? totalText : '£0.00';
+
+            basketInputs.innerHTML = '';
+            basket.forEach(item => {
+                [['examBoard[]',item.board],['courseType[]',item.qualification],['subjectName[]',item.subject],['subjectCode[]',item.code,'subject-code'],['tire[]',item.tier],['nea[]',item.nea]].forEach(([name,value,className]) => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = name;
+                    input.value = value;
+                    if (className) input.className = className;
+                    basketInputs.appendChild(input);
+                });
             });
         }
 
-        // Add new row functionality
-        function addNewRow() {
-            const newRow = document.querySelector('.mainsec').cloneNode(true);
-            const appendSection = document.querySelector('.appendSec');
-
-            const rowContainer = document.createElement('div');
-            rowContainer.className = 'row-container';
-            rowContainer.style.marginBottom = '10px';
-
-            const newTable = document.createElement('table');
-            newTable.style.width = '100%';
-            newTable.style.borderCollapse = 'collapse';
-            newTable.style.tableLayout = 'fixed';
-            newTable.style.border = '1px solid #b0e0e6';
-            newTable.appendChild(newRow);
-
-            rowContainer.appendChild(newTable);
-            appendSection.appendChild(rowContainer);
-
-            // Reset select values and input
-            const selects = newRow.querySelectorAll('select');
-            selects.forEach(select => select.selectedIndex = 0);
-            newRow.querySelector('.subject-code').value = '';
-
-            // Populate boards for the selected session
-            const selectedSession = $('#session').val();
-            const sessionData = subjectsBySession[selectedSession] || {
-                boards: []
-            };
-            const boardSelect = newRow.querySelector('.exam-board');
-            boardSelect.innerHTML = '<option value="" disabled selected>Board</option>';
-            if (sessionData.boards) {
-                sessionData.boards.forEach(board => {
-                    // Hide CIE when Autumn 2026 is selected
-                    if (selectedSession === 'Autumn 2026' && board === 'CIE') return;
-                    boardSelect.append(new Option(board, board));
-                });
-            }
-
-            // Change Add button to Delete button
-            const addButton = newRow.querySelector('.add-row-button');
-            addButton.innerHTML = '<i class="fas fa-trash"></i> Delete';
-            addButton.style.backgroundColor = '#e74c3c';
-            addButton.onclick = function() {
-                rowContainer.remove();
-            };
-
-            isRowAdded = true;
-        }
-
-        // Event delegation for dynamic rows
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('exam-board')) {
-                updateCourseTypes(e.target);
-            } else if (e.target.classList.contains('course-type')) {
-                updateSubjects(e.target);
-            } else if (e.target.classList.contains('subject-name')) {
-                const currentRow = e.target.closest('tr');
-                const board = currentRow.querySelector('.exam-board').value;
-                const courseType = currentRow.querySelector('.course-type').value;
-                const subject = e.target.value;
-
-                if (board && courseType && subject) {
-                    if (checkDuplicateSubject(board, courseType, subject, currentRow)) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Duplicate Subject',
-                            text: `The subject "${subject}" with exam board "${board}" and course type "${courseType}" has already been added.`,
-                            confirmButtonColor: '#57afbfd6',
-                            confirmButtonText: 'OK'
-                        });
-                        e.target.selectedIndex = 0;
-                        currentRow.querySelector('.subject-code').value = '';
-                    }
-                }
-            }
-        });
-
-        // Add row button click
-        document.querySelector('.add-row-button').addEventListener('click', function() {
-            const currentRow = this.closest('tr');
-            const board = currentRow.querySelector('.exam-board').value;
-            const courseType = currentRow.querySelector('.course-type').value;
-            const subject = currentRow.querySelector('.subject-name').value;
-
-            if (board && courseType && subject && checkDuplicateSubject(board, courseType, subject,
-                    currentRow)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Duplicate Subject',
-                    text: `The subject "${subject}" with exam board "${board}" and course type "${courseType}" has already been added.`,
-                    confirmButtonColor: '#57afbfd6',
-                    confirmButtonText: 'OK'
-                });
+        document.getElementById('lecAddToBasket').addEventListener('click', function () {
+            const selected = getSelectedDetails();
+            if (!selected) {
+                Swal.fire({ icon:'warning', title:'Choose an exam', text:'Please select a qualification, exam board and subject first.', confirmButtonColor:'#1e60a7' });
                 return;
             }
-            addNewRow();
+            if (basket.some(item => item.board === selected.board && item.qualification === selected.qualification && item.subject === selected.subject)) {
+                Swal.fire({ icon:'info', title:'Already in basket', text:'This subject has already been added to your basket.', confirmButtonColor:'#1e60a7' });
+                return;
+            }
+            const rawAmount = selected.amount;
+            const amount = rawAmount === null || rawAmount === '' || !Number.isFinite(Number(rawAmount)) ? null : Number(rawAmount);
+            basket.push({ ...selected, amount, tier:document.querySelector('input[name="lecTier"]:checked')?.value || 'N/A', nea:document.querySelector('input[name="lecNea"]:checked')?.value || 'N/A' });
+            renderBasket();
+            // Reload board options from the currently selected session.
+            loadSessionOptions();
+            document.querySelector('input[name="lecTier"][value="N/A"]').checked = true;
+            document.querySelector('input[name="lecNea"][value="N/A"]').checked = true;
+            updateSelectedSubject();
+
+            Swal.fire({ toast:true, position:'top-end', icon:'success', title:'Added to basket', text:'Choose your next exam below.', showConfirmButton:false, timer:1400 });
         });
 
-        // Handle delete for dynamically added rows
-        document.querySelector('.appendSec').addEventListener('click', function(e) {
-            if (e.target.closest('.add-row-button')) {
-                e.target.closest('.row-container').remove();
-                isRowAdded = document.querySelector('.appendSec').querySelector('.row-container') !==
-                    null;
-            }
+        basketItems.addEventListener('click', function (event) {
+            const button = event.target.closest('.lec-remove-item');
+            if (!button) return;
+            basket.splice(Number(button.dataset.index), 1);
+            renderBasket();
         });
+
+        document.getElementById('lecContinueRegistration').addEventListener('click', function () {
+            if (!basket.length) {
+                Swal.fire({ icon:'warning', title:'Your basket is empty', text:'Add at least one exam before continuing.', confirmButtonColor:'#1e60a7' });
+                return;
+            }
+            document.getElementById('candidate-details').scrollIntoView({ behavior:'smooth', block:'start' });
+        });
+
+        renderBasket();
 
         // Additional documents functionality
         const addButton = document.getElementById('addDoc');
@@ -1485,27 +1500,6 @@
             const explanationArea = document.getElementById('practicalExplanationArea');
             explanationArea.style.display = practicalEndorsement === 'carry_forward' ? 'block' : 'none';
         };
-
-        // Check for duplicate subjects
-        function checkDuplicateSubject(board, courseType, subject, currentRow) {
-            const allRows = document.querySelectorAll('.mainsec, .appendSec .mainsec');
-            let isDuplicate = false;
-
-            allRows.forEach(row => {
-                if (row !== currentRow) {
-                    const rowBoard = row.querySelector('.exam-board').value;
-                    const rowCourseType = row.querySelector('.course-type').value;
-                    const rowSubject = row.querySelector('.subject-name').value;
-
-                    if (rowBoard && rowCourseType && rowSubject &&
-                        rowBoard === board && rowCourseType === courseType && rowSubject === subject) {
-                        isDuplicate = true;
-                    }
-                }
-            });
-
-            return isDuplicate;
-        }
 
         // Main submit handler
 // Main submit handler
@@ -1606,6 +1600,10 @@ $('.submitNow').on('click', function(e) {
         }
     }
 
+    // At least one exam must be selected in the basket before registration.
+    if (basket.length === 0) {
+        allMissingValidations.push('At least one exam subject');
+    }
     // Subject code validation
     const subjectCodeInputs = document.querySelectorAll('.subject-code');
     let hasEmptySubjectCode = false;
