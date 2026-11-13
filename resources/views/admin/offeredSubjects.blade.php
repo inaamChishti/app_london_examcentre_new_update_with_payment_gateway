@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 {{-- Cascade maps for JS dependent dropdowns --}}
@@ -15,7 +15,7 @@
 </script>
 
 <style>
-    /* ── Modal overlay ───────────────────────────────────────────── */
+    /* â”€â”€ Modal overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .os-overlay {
         display: none;
         position: fixed; inset: 0;
@@ -86,7 +86,7 @@
         display: flex; justify-content: flex-end; gap: 10px;
     }
 
-    /* ── Buttons ─────────────────────────────────────────────────── */
+    /* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .btn-os-primary {
         padding: 7px 20px; background: #1976D2; color: #fff;
         border: none; border-radius: 6px; font-weight: 600;
@@ -109,7 +109,7 @@
     }
     .btn-os-danger:hover { background: #c82333; }
 
-    /* ── Toast ───────────────────────────────────────────────────── */
+    /* â”€â”€ Toast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     #os-toast {
         display: none; position: fixed; bottom: 28px; right: 28px;
         padding: 10px 20px; border-radius: 7px; font-size: 14px;
@@ -122,7 +122,7 @@
         to   { transform: translateY(0);    opacity: 1; }
     }
 
-    /* ── Action buttons in table ─────────────────────────────────── */
+    /* â”€â”€ Action buttons in table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .btn-edit, .btn-del {
         padding: 4px 9px; border: none; border-radius: 5px;
         font-size: 12px; cursor: pointer; transition: opacity .2s;
@@ -143,11 +143,67 @@
         padding: 4px 8px; background: #1976D2; color: #fff;
         border: none; border-radius: 5px; cursor: pointer; font-size: 12px;
     }
+    /* Offered Subjects table - same layout as Session Management */
+    .os-table-wrap { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .os-table {
+        width:100% !important; min-width:850px; font-size:.9rem !important;
+        border-collapse:collapse !important; table-layout:auto !important;
+        border:0 !important; color:#444; background:#fff;
+    }
+    .os-table thead { background:#F87A14 !important; color:#fff !important; }
+    .os-table thead tr, .os-table thead th {
+        background:#F87A14 !important; color:#fff !important;
+    }
+    .os-table thead th {
+        padding:10px 15px !important; font-size:.9rem !important;
+        font-weight:600 !important; text-align:left !important;
+        text-transform:none !important; letter-spacing:normal !important;
+        border:0 !important; border-bottom:4px solid #1976D2 !important;
+        white-space:nowrap;
+    }
+    .os-table tbody tr { transition:background-color .2s ease; }
+    .os-table tbody tr:hover { background:#fff7f0 !important; }
+    .os-table tbody td {
+        padding:10px 15px !important; vertical-align:middle !important;
+        font-size:.85rem !important; text-align:left !important;
+        border:0 !important; border-bottom:1px solid #dee2e6 !important;
+        line-height:1.45;
+    }
+    .os-table tbody td:last-child, .os-table thead th:last-child { text-align:left !important; }
+    .os-table .amount-input {
+        width:90px !important; padding:5px 8px !important;
+        border:1px solid #ced4da !important; border-radius:5px !important;
+        background:#fff !important; color:#444 !important;
+        font:400 13px 'Nunito',sans-serif !important; text-align:right;
+    }
+    .os-table .amount-input:focus {
+        outline:none; border-color:#F87A14 !important;
+        box-shadow:0 0 0 2px rgba(248,122,20,.12);
+    }
+    .os-table .save-amount-btn {
+        min-width:30px; min-height:30px; display:inline-flex;
+        align-items:center; justify-content:center; background:#28a745 !important;
+        color:#fff !important; border:0; border-radius:5px !important;
+    }
+    .os-table .save-amount-btn:hover { background:#218838 !important; }
+    .os-table .btn-edit, .os-table .btn-del {
+        width:auto; min-width:30px; min-height:30px; padding:5px 9px !important;
+        display:inline-flex; align-items:center; justify-content:center;
+        border-radius:5px !important; font-size:12px !important;
+    }
+    .os-table .btn-edit { background:#28a745 !important; color:#fff !important; }
+    .os-table .btn-edit:hover { background:#218838 !important; }
+    .os-table .btn-del { background:#dc3545 !important; color:#fff !important; }
+    .os-table .btn-del:hover { background:#c82333 !important; }
+    @media (max-width:768px) {
+        .os-table { min-width:820px; }
+        .os-table thead th, .os-table tbody td { padding:9px 11px !important; }
+    }
 </style>
 
 <div class="container-fluid" style="padding: 20px;">
 
-    {{-- ── Page Header ──────────────────────────────────────── --}}
+    {{-- â”€â”€ Page Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
     <div style="background: #F87A14; border-radius: 8px 8px 0 0; border-bottom: 4px solid #1976D2;
                 padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;">
         <div style="display:flex; align-items:center; gap:12px;">
@@ -165,7 +221,7 @@
     <div style="background:#fff; border-radius:0 0 8px 8px;
                 box-shadow:0 0.15rem 1.75rem rgba(58,59,69,.15); padding:22px;">
 
-        {{-- ── Filter Form ──────────────────────────────────── --}}
+        {{-- â”€â”€ Filter Form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
         <form method="GET" action="{{ url('admin/offered-subjects') }}" id="filterForm">
             <div style="display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end; margin-bottom:18px;">
 
@@ -227,7 +283,7 @@
             </div>
         </form>
 
-        {{-- ── Result count ──────────────────────────────────── --}}
+        {{-- â”€â”€ Result count â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
         <div style="margin-bottom:10px; color:#555; font-size:13px; display:flex; align-items:center; gap:8px;">
             <span>Showing <strong id="rowCount">{{ $subjects->count() }}</strong> subject(s)</span>
             @if($selectedSession)
@@ -241,16 +297,16 @@
             @endif
         </div>
 
-        {{-- ── Table ────────────────────────────────────────── --}}
-        <div style="overflow-x:auto;">
-            <table id="subjectsTable" style="width:100%; border-collapse:collapse; font-size:13px;">
+        {{-- â”€â”€ Table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ --}}
+        <div class="os-table-wrap">
+            <table id="subjectsTable" class="os-table">
                 <thead>
-                    <tr style="background:#1976D2; color:#fff;">
+                    <tr style="background:#F87A14; color:#fff;">
                         <th style="padding:10px 13px; text-align:left; white-space:nowrap;">Exam Board</th>
                         <th style="padding:10px 13px; text-align:left; white-space:nowrap;">Qualification</th>
                         <th style="padding:10px 13px; text-align:left; white-space:nowrap;">Code</th>
                         <th style="padding:10px 13px; text-align:left;">Description</th>
-                        <th style="padding:10px 13px; text-align:left; white-space:nowrap;">Amount (£)</th>
+                        <th style="padding:10px 13px; text-align:left; white-space:nowrap;">Amount (&#163;)</th>
                         <th style="padding:10px 13px; text-align:left; white-space:nowrap;">Session</th>
                         <th style="padding:10px 13px; text-align:center; white-space:nowrap; width:100px;">Actions</th>
                     </tr>
@@ -288,7 +344,7 @@
                                     {{ $sub->session }}
                                 </span>
                             @else
-                                <span style="color:#aaa; font-size:12px;">—</span>
+                                <span style="color:#aaa; font-size:12px;">â€”</span>
                             @endif
                         </td>
                         <td style="padding:8px 13px; text-align:center;">
@@ -316,12 +372,12 @@
     </div>
 </div>
 
-{{-- ════════════════ ADD MODAL ════════════════ --}}
+{{-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ADD MODAL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• --}}
 <div class="os-overlay" id="addOverlay">
     <div class="os-modal">
         <div class="os-modal-header">
             <h5><i class="fas fa-plus-circle" style="margin-right:8px;"></i>Add New Subject</h5>
-            <button class="os-close" onclick="closeModal('addOverlay')">×</button>
+            <button class="os-close" onclick="closeModal('addOverlay')">Ã—</button>
         </div>
         <div class="os-modal-body">
             <div class="os-form-grid">
@@ -341,7 +397,7 @@
                     <div class="os-error" id="err_add_code">Required.</div>
                 </div>
                 <div class="os-form-row">
-                    <label>Amount (£)</label>
+                    <label>Amount (&#163;)</label>
                     <input type="number" id="add_amount" min="0" step="0.01" placeholder="0.00" />
                 </div>
             </div>
@@ -352,7 +408,12 @@
             </div>
             <div class="os-form-row">
                 <label>Session</label>
-                <input type="text" id="add_session" placeholder="e.g. Summer 2027" />
+                <select id="add_session">
+                    <option value="">-- Select Session --</option>
+                    @foreach($sessions as $session)
+                        <option value="{{ $session }}">{{ $session }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="os-modal-footer">
@@ -364,12 +425,12 @@
     </div>
 </div>
 
-{{-- ════════════════ EDIT MODAL ════════════════ --}}
+{{-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• EDIT MODAL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• --}}
 <div class="os-overlay" id="editOverlay">
     <div class="os-modal">
         <div class="os-modal-header">
             <h5><i class="fas fa-pen" style="margin-right:8px;"></i>Edit Subject</h5>
-            <button class="os-close" onclick="closeModal('editOverlay')">×</button>
+            <button class="os-close" onclick="closeModal('editOverlay')">Ã—</button>
         </div>
         <div class="os-modal-body">
             <input type="hidden" id="edit_id" />
@@ -390,7 +451,7 @@
                     <div class="os-error" id="err_edit_code">Required.</div>
                 </div>
                 <div class="os-form-row">
-                    <label>Amount (£)</label>
+                    <label>Amount (&#163;)</label>
                     <input type="number" id="edit_amount" min="0" step="0.01" placeholder="0.00" />
                 </div>
             </div>
@@ -401,7 +462,12 @@
             </div>
             <div class="os-form-row">
                 <label>Session</label>
-                <input type="text" id="edit_session" />
+                <select id="edit_session">
+                    <option value="">-- Select Session --</option>
+                    @foreach($sessions as $session)
+                        <option value="{{ $session }}">{{ $session }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="os-modal-footer">
@@ -413,12 +479,12 @@
     </div>
 </div>
 
-{{-- ════════════════ DELETE CONFIRM MODAL ════════════════ --}}
+{{-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• DELETE CONFIRM MODAL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• --}}
 <div class="os-overlay" id="deleteOverlay">
     <div class="os-modal" style="max-width:420px;">
         <div class="os-modal-header" style="background:#dc3545; border-bottom-color:#c82333;">
             <h5><i class="fas fa-exclamation-triangle" style="margin-right:8px;"></i>Confirm Delete</h5>
-            <button class="os-close" onclick="closeModal('deleteOverlay')">×</button>
+            <button class="os-close" onclick="closeModal('deleteOverlay')">Ã—</button>
         </div>
         <div class="os-modal-body" style="text-align:center; padding:28px 24px;">
             <i class="fas fa-trash-alt fa-3x" style="color:#dc3545; margin-bottom:14px;"></i>
@@ -438,11 +504,11 @@
     </div>
 </div>
 
-{{-- ── Toast ── --}}
+{{-- â”€â”€ Toast â”€â”€ --}}
 <div id="os-toast"></div>
 
 <script>
-// ── Row data store (populated from PHP) ──────────────────────────────────────
+// â”€â”€ Row data store (populated from PHP) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const rowData = {};
 @foreach($subjects as $sub)
 rowData[{{ $sub->id }}] = {
@@ -455,7 +521,7 @@ rowData[{{ $sub->id }}] = {
 };
 @endforeach
 
-// ── Toast ────────────────────────────────────────────────────────────────────
+// â”€â”€ Toast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function showToast(msg, type = 'success') {
     const t = document.getElementById('os-toast');
     t.style.background = type === 'success' ? '#28a745' : '#dc3545';
@@ -465,7 +531,7 @@ function showToast(msg, type = 'success') {
     window._toastTimer = setTimeout(() => t.style.display = 'none', 2800);
 }
 
-// ── Modal helpers ────────────────────────────────────────────────────────────
+// â”€â”€ Modal helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openModal(id)  { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 // Close on overlay click
@@ -473,7 +539,7 @@ document.querySelectorAll('.os-overlay').forEach(ov => {
     ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('active'); });
 });
 
-// ── Validate field ───────────────────────────────────────────────────────────
+// â”€â”€ Validate field â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function validateField(inputId, errId) {
     const val = document.getElementById(inputId).value.trim();
     const err = document.getElementById(errId);
@@ -487,7 +553,7 @@ function clearErrors(prefix) {
     });
 }
 
-// ── ADD ──────────────────────────────────────────────────────────────────────
+// â”€â”€ ADD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openAddModal() {
     clearErrors('add');
     // Pre-fill from active filters
@@ -512,7 +578,7 @@ function saveAdd() {
 
     const btn = document.getElementById('addSaveBtn');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:5px;"></i>Saving…';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:5px;"></i>Savingâ€¦';
 
     const payload = {
         examboard:     document.getElementById('add_examboard').value.trim(),
@@ -545,7 +611,7 @@ function saveAdd() {
     });
 }
 
-// ── EDIT ─────────────────────────────────────────────────────────────────────
+// â”€â”€ EDIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openEditModal(id) {
     clearErrors('edit');
     const d = rowData[id];
@@ -572,7 +638,7 @@ function saveEdit() {
     const id  = document.getElementById('edit_id').value;
     const btn = document.getElementById('editSaveBtn');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:5px;"></i>Updating…';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:5px;"></i>Updatingâ€¦';
 
     const payload = {
         examboard:     document.getElementById('edit_examboard').value.trim(),
@@ -605,11 +671,11 @@ function saveEdit() {
     });
 }
 
-// ── DELETE ───────────────────────────────────────────────────────────────────
+// â”€â”€ DELETE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openDeleteModal(id) {
     document.getElementById('delete_id').value = id;
     const d = rowData[id];
-    document.getElementById('deleteSubjectName').textContent = `${d.code} — ${d.description}`;
+    document.getElementById('deleteSubjectName').textContent = `${d.code} â€” ${d.description}`;
     openModal('deleteOverlay');
 }
 
@@ -617,7 +683,7 @@ function confirmDelete() {
     const id  = document.getElementById('delete_id').value;
     const btn = document.getElementById('deleteConfirmBtn');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:5px;"></i>Deleting…';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:5px;"></i>Deletingâ€¦';
 
     fetch(`${baseUrl}/${id}`, {
         method: 'DELETE',
@@ -640,12 +706,12 @@ function confirmDelete() {
     });
 }
 
-// ── DOM helpers ───────────────────────────────────────────────────────────────
+// â”€â”€ DOM helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function buildRow(s, isEven) {
     const amountVal = s.amount !== null ? parseFloat(s.amount).toFixed(2) : '';
     const sessionBadge = s.session
         ? `<span style="background:#fff3cd;color:#856404;padding:2px 8px;border-radius:4px;font-size:12px;white-space:nowrap;">${s.session}</span>`
-        : `<span style="color:#aaa;font-size:12px;">—</span>`;
+        : `<span style="color:#aaa;font-size:12px;">â€”</span>`;
 
     rowData[s.id] = {
         examboard: s.examboard, qualification: s.qualification,
@@ -668,7 +734,7 @@ function buildRow(s, isEven) {
         <td style="padding:8px 13px;color:#444;">${s.description}</td>
         <td style="padding:6px 13px;">
             <div style="display:flex;align-items:center;gap:5px;">
-                <span style="color:#555;font-size:12px;">£</span>
+                <span style="color:#555;font-size:12px;">&#163;</span>
                 <input type="number" min="0" step="0.01" class="amount-input" data-id="${s.id}" value="${amountVal}" placeholder="0.00" />
                 <button type="button" class="save-amount-btn" data-id="${s.id}" title="Save amount"><i class="fas fa-save"></i></button>
             </div>
@@ -729,7 +795,7 @@ function updateCount(delta) {
     if (el) el.textContent = parseInt(el.textContent) + delta;
 }
 
-// ── Inline Amount Save ────────────────────────────────────────────────────────
+// â”€â”€ Inline Amount Save â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function saveAmount(id) {
     const input = document.querySelector(`.amount-input[data-id="${id}"]`);
     const btn   = document.querySelector(`.save-amount-btn[data-id="${id}"]`);
@@ -771,7 +837,7 @@ document.querySelectorAll('.amount-input').forEach(input => {
     });
 });
 
-// ── Filter cascade dropdowns ──────────────────────────────────────────────────
+// â”€â”€ Filter cascade dropdowns â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const boardSelect   = document.getElementById('boardSelect');
 const qualSelect    = document.getElementById('qualSelect');
 const sessionSelect = document.getElementById('sessionSelect');
