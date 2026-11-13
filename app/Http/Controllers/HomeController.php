@@ -244,56 +244,18 @@ class HomeController extends Controller
 
     public function addStudent()
     {
-        // $subjectsData = Subjects::select('examBoard', 'courseType', 'subjectName', 'subjectCode')
-        //     ->orderBy('examBoard')
-        //     ->orderBy('courseType')
-        //     ->orderBy('subjectName')
-        //     ->get();
-
-        // $data = [
-        //     'boards' => $subjectsData->pluck('examBoard')->unique()->values(),
-        //     'courseTypesByBoard' => $subjectsData->groupBy('examBoard')->map(function ($items) {
-        //         return $items->pluck('courseType')->unique()->values();
-        //     }),
-        //     'subjectsByBoardAndCourse' => $subjectsData->groupBy(['examBoard', 'courseType'])->map(function ($courseTypes) {
-        //         return $courseTypes->map(function ($subjects) {
-        //             return $subjects->mapWithKeys(function ($item) {
-        //                 return [$item->subjectName => $item->subjectCode]; // Name as key, code as value
-        //             });
-        //         });
-        //     })
-        // ];
-        // $subjectsData = OfferedSubject::select('examboard as examBoard', 'qualification as courseType', 'description as subjectName', 'code as subjectCode')
-        //     ->orderBy('examboard')
-        //     ->orderBy('qualification')
-        //     ->orderBy('description')
-        //     ->get();
-
-        // $data = [
-        //     'boards' => $subjectsData->pluck('examBoard')->unique()->values(),
-        //     'courseTypesByBoard' => $subjectsData->groupBy('examBoard')->map(function ($items) {
-        //         return $items->pluck('courseType')->unique()->values();
-        //     }),
-        //     'subjectsByBoardAndCourse' => $subjectsData->groupBy(['examBoard', 'courseType'])->map(function ($courseTypes) {
-        //         return $courseTypes->map(function ($subjects) {
-        //             return $subjects->mapWithKeys(function ($item) {
-        //                 return [$item->subjectName => $item->subjectCode];
-        //             });
-        //         });
-        //     }),
-        //     'sessions' => Session::all(), // Fetch all sessions
-        //     'activeSession' => Session::where('status', 'active')->first()
-        // ];
-
-        // // dd($session);
-        // return view('student.addStudent', $data);
-
-        // Show only Summer 2027 in the dropdown (Autumn 2026 removed)
+        // Keep the internal registration page aligned with the public exam selector.
         $sessions = Session::whereIn('session_name', ['Summer 2027'])->get();
         $activeSession = Session::where('session_name', 'Summer 2027')->first();
 
-        // Fetch subjects data for Summer 2027
-        $subjectsData = OfferedSubject::select('examboard as examBoard', 'qualification as courseType', 'description as subjectName', 'code as subjectCode', 'session')
+        $subjectsData = OfferedSubject::select(
+            'examboard as examBoard',
+            'qualification as courseType',
+            'description as subjectName',
+            'code as subjectCode',
+            'session',
+            'amount'
+        )
             ->whereIn('session', ['Summer 2027'])
             ->orderBy('examboard')
             ->orderBy('qualification')
@@ -307,6 +269,20 @@ class HomeController extends Controller
             'subjectsBySession' => $subjectsData->map(function ($sessionSubjects) {
                 return [
                     'boards' => $sessionSubjects->pluck('examBoard')->unique()->values(),
+                    'qualifications' => $sessionSubjects->pluck('courseType')->unique()->values(),
+                    'boardsByQualification' => $sessionSubjects->groupBy('courseType')->map(function ($items) {
+                        return $items->pluck('examBoard')->unique()->values();
+                    }),
+                    'subjectsByQualificationAndBoard' => $sessionSubjects->groupBy(['courseType', 'examBoard'])->map(function ($boards) {
+                        return $boards->map(function ($subjects) {
+                            return $subjects->mapWithKeys(function ($item) {
+                                return [$item->subjectName => [
+                                    'code' => $item->subjectCode,
+                                    'amount' => $item->amount,
+                                ]];
+                            });
+                        });
+                    }),
                     'courseTypesByBoard' => $sessionSubjects->groupBy('examBoard')->map(function ($items) {
                         return $items->pluck('courseType')->unique()->values();
                     }),
@@ -323,8 +299,6 @@ class HomeController extends Controller
 
         return view('student.addStudent', $data);
     }
-
-
     public function publicPage()
     {
         $subjectsData = Subjects::select('examBoard', 'courseType', 'subjectName', 'subjectCode')

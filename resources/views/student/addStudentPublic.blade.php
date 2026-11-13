@@ -20,59 +20,62 @@
     @include('layouts.adminDashboard.style')
 
 <style>
-.lec-booking{margin:26px 0 32px;color:#142d50;font-family:Nunito,Arial,sans-serif}
-.lec-booking-hero{padding:24px 28px;color:#fff;border-radius:16px 16px 0 0;background:linear-gradient(110deg,#1556a1 0%,#286eb8 62%,#174b8c 100%);position:relative;overflow:hidden}
-.lec-booking-hero h2{margin:0 0 6px;font-size:clamp(22px,3vw,30px);font-weight:800;color:#fff}
-.lec-booking-hero p{margin:0;color:#eaf3ff;font-size:14px}
-.lec-booking-grid{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(290px,.92fr);gap:18px;padding:18px;background:#f4f7fb;border:1px solid #e1e9f4;border-top:0;border-radius:0 0 16px 16px;align-items:start}
-.lec-select-panel,.lec-basket-panel{background:#fff;border:1px solid #e0e8f2;border-radius:15px;box-shadow:0 5px 18px rgba(23,61,105,.07)}
-.lec-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 19px;border-bottom:1px solid #e9eef5}
-.lec-panel-heading h3{margin:0;color:#15365f;font-size:18px;font-weight:800}
-.lec-panel-heading .lec-icon{color:#1d63aa;font-size:20px;margin-right:9px}
-.lec-select-body{padding:18px}
-.lec-field-label{display:block;margin:0 0 7px;color:#25466e;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.45px}
-.lec-field{width:100%;min-height:45px;padding:10px 13px;border:1px solid #ccd8e7;border-radius:9px;background:#fff;color:#18385f;font-size:14px;font-weight:700}
-.lec-field:focus{outline:none;border-color:#2c70b8;box-shadow:0 0 0 3px rgba(44,112,184,.12)}
+/* Exam booking inherits the active centre brand colour from the domain theme. */
+.lec-booking{--lec-primary:#F87A14;--lec-primary-dark:color-mix(in srgb,var(--lec-primary) 82%,black);--lec-tint:color-mix(in srgb,var(--lec-primary) 8%,white);--lec-border:color-mix(in srgb,var(--lec-primary) 22%,white);margin:26px 0 32px;color:#303044;font-family:inherit}
+.lec-booking-hero{padding:22px 25px;color:#fff;border-radius:8px 8px 0 0;background:var(--lec-primary);border-bottom:4px solid var(--lec-primary-dark);position:relative;overflow:hidden}
+.lec-booking-hero h2{margin:0 0 6px;font-size:clamp(20px,2.5vw,25px);font-weight:700;color:#fff}
+.lec-booking-hero p{margin:0;color:rgba(255,255,255,.88);font-size:13px}
+.lec-booking-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,.9fr);gap:16px;padding:17px;background:#fff;border:1px solid #e6e6ec;border-top:0;border-radius:0 0 8px 8px;align-items:start}
+.lec-select-panel,.lec-basket-panel{min-width:0;background:#fff;border:1px solid #e3e3e9;border-radius:8px;box-shadow:0 2px 10px rgba(35,35,60,.06);overflow:hidden}
+.lec-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:#fafafd;border-bottom:1px solid #e8e8ef}
+.lec-panel-heading h3{margin:0;color:#303044;font-size:16px;font-weight:700}
+.lec-panel-heading .lec-icon{color:var(--lec-primary);font-size:17px;margin-right:8px}
+.lec-select-body{padding:16px}
+.lec-field-label{display:block;margin:0 0 6px;color:#45455a;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.35px}
+.lec-field{width:100%;min-height:43px;padding:9px 11px;border:1px solid #d4d4df;border-radius:5px;background:#fff;color:#343448;font:inherit;font-size:13px}
+.lec-field:focus{outline:none;border-color:var(--lec-primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--lec-primary) 15%,transparent)}
+.lec-field:disabled{background:#f6f6f8;color:#9292a0;cursor:not-allowed}
 .lec-field-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.lec-current-subject{margin-top:16px;padding:16px;border:1px solid #d7e5f6;border-radius:12px;background:linear-gradient(110deg,#f1f6ff,#e8f1ff)}
+.lec-current-subject{margin-top:15px;padding:15px;border:1px solid var(--lec-border);border-left:3px solid var(--lec-primary);border-radius:6px;background:var(--lec-tint)}
 .lec-current-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.lec-current-title{font-size:17px;font-weight:800;color:#173c6c}
-.lec-current-price{font-size:23px;font-weight:900;color:#153d70;white-space:nowrap}
-.lec-current-meta{margin-top:3px;font-size:12px;color:#536a84}
-.lec-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.lec-current-title{font-size:15px;font-weight:700;color:#303044}
+.lec-current-price{font-size:21px;font-weight:800;color:var(--lec-primary);white-space:nowrap}
+.lec-current-meta{margin-top:3px;font-size:12px;color:#707080}
+.lec-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}
 .lec-option-block{min-width:0}
-.lec-option-title{margin:0 0 8px;color:#193c68;font-size:13px;font-weight:800}
-.lec-choice{display:flex;align-items:flex-start;gap:9px;padding:10px 11px;margin:6px 0;min-height:42px;border:1px solid #d9e1ec;border-radius:9px;cursor:pointer;background:#fff;color:#304964;font-size:12px}
-.lec-choice:has(input:checked){border-color:#3676b9;background:#edf5ff;color:#153d70;box-shadow:inset 0 0 0 1px #3676b9}
-.lec-choice input{margin-top:2px;accent-color:#2165a9}
-.lec-info{margin-top:12px;padding:10px 12px;border-radius:9px;background:#edf4fc;color:#395a7d;font-size:11px;line-height:1.5}
-.lec-add-row{display:flex;align-items:center;justify-content:flex-end;gap:15px;margin-top:15px;padding-top:14px;border-top:1px solid #d8e5f5}
-.lec-add-row strong{color:#153d70;font-size:24px}
-.lec-add-btn,.lec-continue-btn{border:0;border-radius:9px;padding:12px 18px;color:#fff;background:#1e60a7;font-weight:800;font-size:13px;cursor:pointer;transition:.2s}
-.lec-add-btn:hover,.lec-continue-btn:hover{background:#164c88;transform:translateY(-1px)}
-.lec-basket-count{padding:5px 10px;border-radius:20px;background:#e8f0fb;color:#194b82;font-size:11px;font-weight:800;white-space:nowrap}
-.lec-basket-body{padding:12px 15px 16px}
-.lec-basket-empty{padding:26px 12px;text-align:center;color:#71839a;font-size:13px}
-.lec-basket-empty i{display:block;margin-bottom:9px;font-size:27px;color:#8da8c8}
-.lec-basket-item{position:relative;padding:12px 36px 12px 10px;border-bottom:1px solid #e9eef5}
+.lec-option-title{margin:0 0 8px;color:#3c3c50;font-size:12px;font-weight:700}
+.lec-choice{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;margin:6px 0;min-height:39px;border:1px solid #dedee6;border-radius:5px;cursor:pointer;background:#fff;color:#4b4b5c;font-size:12px}
+.lec-choice:has(input:checked){border-color:var(--lec-primary);background:var(--lec-tint);color:var(--lec-primary-dark);box-shadow:inset 0 0 0 1px var(--lec-primary)}
+.lec-choice input{margin-top:2px;accent-color:var(--lec-primary)}
+.lec-info{margin-top:11px;padding:10px 11px;border-radius:5px;background:var(--lec-tint);color:#55556a;font-size:11px;line-height:1.5}
+.lec-info i{color:var(--lec-primary);margin-right:4px}
+.lec-add-row{display:flex;align-items:center;justify-content:flex-end;gap:14px;margin-top:14px;padding-top:13px;border-top:1px solid #e1e1e8}
+.lec-add-row strong{color:var(--lec-primary);font-size:21px}
+.lec-add-btn,.lec-continue-btn{border:0;border-radius:5px;padding:11px 17px;color:#fff;background:var(--lec-primary);font-weight:700;font-size:12px;cursor:pointer;transition:background .2s,transform .2s}
+.lec-add-btn:hover,.lec-continue-btn:hover{background:var(--lec-primary-dark);transform:translateY(-1px)}
+.lec-basket-count{padding:5px 9px;border-radius:4px;background:var(--lec-tint);color:var(--lec-primary);font-size:11px;font-weight:700;white-space:nowrap}
+.lec-basket-body{padding:12px 14px 15px}
+.lec-basket-empty{padding:24px 10px;text-align:center;color:#777787;font-size:12px}
+.lec-basket-empty i{display:block;margin-bottom:9px;font-size:25px;color:var(--lec-primary)}
+.lec-basket-item{position:relative;padding:11px 34px 11px 8px;border-bottom:1px solid #ededf1}
 .lec-basket-item:last-child{border-bottom:0}
-.lec-basket-item h4{margin:0 0 3px;color:#173b67;font-size:13px;font-weight:800}
-.lec-basket-item .lec-item-meta{color:#657b95;font-size:11px}
-.lec-basket-item .lec-item-options{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.lec-item-pill{padding:4px 7px;border-radius:6px;background:#eef2f7;color:#4a6079;font-size:10px;font-weight:700}
-.lec-item-price{float:right;margin-left:8px;color:#173b67;font-size:13px;font-weight:900}
-.lec-remove-item{position:absolute;top:11px;right:2px;border:0;background:transparent;color:#6b7d91;font-size:15px;cursor:pointer}
+.lec-basket-item h4{margin:0 0 3px;color:#38384b;font-size:12px;font-weight:700}
+.lec-basket-item .lec-item-meta{color:#777787;font-size:11px}
+.lec-basket-item .lec-item-options{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.lec-item-pill{padding:4px 7px;border-radius:4px;background:#f0f0f4;color:#555568;font-size:10px;font-weight:600}
+.lec-item-price{float:right;margin-left:8px;color:var(--lec-primary);font-size:12px;font-weight:800}
+.lec-remove-item{position:absolute;top:10px;right:1px;border:0;background:transparent;color:#777787;font-size:14px;cursor:pointer}
 .lec-remove-item:hover{color:#c0392b}
-.lec-basket-total{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:9px 0 13px;padding:13px 12px;border-radius:10px;background:#e8f1ff;color:#183e70;font-weight:800}
-.lec-basket-total strong{font-size:22px;white-space:nowrap}
-.lec-basket-note{margin:0 0 12px;color:#687e96;font-size:10px;line-height:1.5}
-.lec-continue-btn{display:block;width:100%;padding:13px 15px}
-.lec-feature-strip{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;padding:15px 8px 4px;color:#274c75;font-size:11px;font-weight:800}
+.lec-basket-total{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:9px 0 12px;padding:12px;border-radius:5px;background:var(--lec-tint);color:#38384b;font-weight:700}
+.lec-basket-total strong{font-size:20px;color:var(--lec-primary);white-space:nowrap}
+.lec-basket-note{margin:0 0 11px;color:#777787;font-size:10px;line-height:1.5}
+.lec-continue-btn{display:block;width:100%;padding:12px 14px}
+.lec-feature-strip{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;padding:13px 8px 2px;color:#555568;font-size:11px;font-weight:600}
 .lec-feature-strip span{display:flex;align-items:center;gap:7px}
-.lec-feature-strip i{color:#2869ad;font-size:17px}
+.lec-feature-strip i{color:var(--lec-primary);font-size:14px}
 #candidate-details{scroll-margin-top:24px}
-@media(max-width:850px){.lec-booking-grid{grid-template-columns:1fr}.lec-field-grid{grid-template-columns:1fr}}
-@media(max-width:560px){.lec-booking-hero{padding:19px 17px}.lec-booking-grid{padding:10px}.lec-select-body{padding:13px}.lec-option-grid{grid-template-columns:1fr}.lec-current-top{align-items:flex-start;flex-direction:column;gap:4px}.lec-add-row{align-items:stretch;flex-direction:column}.lec-add-row strong{text-align:right}.lec-add-btn{width:100%}.lec-feature-strip{justify-content:flex-start;padding-left:14px}}
+@media(max-width:850px){.lec-booking-grid{grid-template-columns:1fr}.lec-field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.lec-booking-hero{padding:18px 15px}.lec-booking-grid{padding:10px}.lec-select-body{padding:12px}.lec-field-grid,.lec-option-grid{grid-template-columns:1fr}.lec-current-top{align-items:flex-start;flex-direction:column;gap:4px}.lec-add-row{align-items:stretch;flex-direction:column}.lec-add-row strong{text-align:right}.lec-add-btn{width:100%}.lec-feature-strip{justify-content:flex-start;padding-left:12px}}
 </style>
 
 </head>
@@ -2387,4 +2390,44 @@ $('.submitNow').on('click', function(e) {
             }
         }
     });
+</script>
+
+<script>
+/* Keep the exam booking colours in sync with the active centre/domain theme. */
+document.addEventListener('DOMContentLoaded', function () {
+    const booking = document.querySelector('.lec-booking');
+    if (!booking) return;
+
+    const centreThemes = {
+        'londonexamcentre.co.uk': '#2A2A70',
+        'brenttuitionandexamcentre.co.uk': '#57afbfd6',
+        'essexexamcentre.co.uk': '#0070b7',
+        'frobeleducation.co.uk': '#F27810',
+        'frobeleducation.efrobel.com': '#F27810',
+        'camdentuitionandexamcentre.co.uk': '#70A309',
+        'croydontuitionandexamcentre.co.uk': '#FD8700',
+        'ealingtuitionandexamcentre.co.uk': '#535353',
+        'bexleytuitionandexamcentre.co.uk': '#448375',
+        'barnettuitionandexamcentre.co.uk': '#008000',
+        'greenwichtuitionandexamcentre.co.uk': '#86C4DF'
+    };
+
+    let hostname = window.location.hostname;
+    try {
+        const sourceUrl = document.referrer || window.location.href;
+        hostname = new URL(sourceUrl).hostname || hostname;
+    } catch (error) {
+        // Keep the current page hostname if the referrer is unavailable.
+    }
+
+    const matchedDomain = Object.keys(centreThemes).find(domain => hostname.includes(domain));
+    const primary = matchedDomain ? centreThemes[matchedDomain] : '#F87A14';
+
+    booking.style.setProperty('--lec-primary', primary);
+    booking.style.setProperty('--lec-primary-dark', 'color-mix(in srgb, ' + primary + ' 82%, black)');
+    const rgbHex = primary.length === 9 ? primary.slice(0, 7) : primary;
+    const channels = rgbHex.match(/[A-Fa-f0-9]{2}/g).slice(0, 3).map(value => parseInt(value, 16));
+    booking.style.setProperty('--lec-tint', 'rgba(' + channels.join(',') + ',0.08)');
+    booking.style.setProperty('--lec-border', 'rgba(' + channels.join(',') + ',0.22)');
+});
 </script>
