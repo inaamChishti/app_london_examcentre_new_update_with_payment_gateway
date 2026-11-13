@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 {{-- Cascade maps for JS dependent dropdowns --}}
@@ -181,8 +181,8 @@
         box-shadow:0 0 0 2px rgba(248,122,20,.12);
     }
     .os-table .save-amount-btn {
-        min-width:30px; min-height:30px; display:inline-flex;
-        align-items:center; justify-content:center; background:#28a745 !important;
+        min-width:64px; min-height:30px; padding:5px 9px !important; display:inline-flex;
+        align-items:center; justify-content:center; gap:5px; background:#28a745 !important; font-size:12px; font-weight:600; white-space:nowrap;
         color:#fff !important; border:0; border-radius:5px !important;
     }
     .os-table .save-amount-btn:hover { background:#218838 !important; }
@@ -333,9 +333,7 @@
                                     data-id="{{ $sub->id }}"
                                     value="{{ $sub->amount !== null ? number_format((float)$sub->amount,2,'.',''): '' }}"
                                     placeholder="0.00" />
-                                <button type="button" class="save-amount-btn" data-id="{{ $sub->id }}" title="Save amount">
-                                    <i class="fas fa-save"></i>
-                                </button>
+                                <button type="button" class="save-amount-btn" data-id="{{ $sub->id }}" title="Click to save this amount"><i class="fas fa-save"></i><span>Save</span></button>
                             </div>
                         </td>
                         <td style="padding:8px 13px;">
@@ -736,7 +734,7 @@ function buildRow(s, isEven) {
             <div style="display:flex;align-items:center;gap:5px;">
                 <span style="color:#555;font-size:12px;">&#163;</span>
                 <input type="number" min="0" step="0.01" class="amount-input" data-id="${s.id}" value="${amountVal}" placeholder="0.00" />
-                <button type="button" class="save-amount-btn" data-id="${s.id}" title="Save amount"><i class="fas fa-save"></i></button>
+                <button type="button" class="save-amount-btn" data-id="${s.id}" title="Click to save this amount"><i class="fas fa-save"></i><span>Save</span></button>
             </div>
         </td>
         <td style="padding:8px 13px;">${sessionBadge}</td>
@@ -801,7 +799,7 @@ function saveAmount(id) {
     const btn   = document.querySelector(`.save-amount-btn[data-id="${id}"]`);
     const amount = input.value.trim();
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Saving...</span>';
 
     fetch(`${baseUrl}/${id}/amount`, {
         method: 'PATCH',
@@ -823,7 +821,7 @@ function saveAmount(id) {
     .catch(() => showToast('Network error.', 'error'))
     .finally(() => {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-save"></i>';
+        btn.innerHTML = '<i class="fas fa-save"></i><span>Save</span>';
     });
 }
 
