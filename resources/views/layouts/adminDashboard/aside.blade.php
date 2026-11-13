@@ -317,5 +317,20 @@
                 <div class="menu-text"><i style="font-size: 12px;">Help</i></div>
             </a>
         @endif --}}
+
+        <!-- Admin Operations Section -->
+        <div class="menu-title">Admin Operations</div>
+        <a href="#" class="menu-item {{ request()->is('admin/*') ? 'active' : '' }}">
+            <div class="menu-icon"><i class="fas fa-cogs" style="color: #F87A14;"></i></div>
+            <div class="menu-text"><i style="font-size: 12px;">Admin Operations</i></div>
+            <div class="menu-arrow"><i class="fas fa-angle-right" style="color: #FF69B4;"></i></div>
+        </a>
+        <div class="submenu">
+            <a href="{{ url('admin/offered-subjects') }}" class="submenu-item {{ request()->is('admin/offered-subjects') ? 'active' : '' }}">
+                <div class="submenu-icon"><i class="fas fa-book-open" style="color: #1976D2;"></i></div>
+                <i style="font-size: 12px;">Offered Subjects</i>
+            </a>
+        </div>
+
     </div>
 </aside>

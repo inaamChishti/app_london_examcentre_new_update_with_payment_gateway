@@ -13,6 +13,7 @@ class OfferedSubject extends Model
         'qualification',
         'code',
         'description',
-        'session'
+        'session',
+        'amount',
     ];
 }

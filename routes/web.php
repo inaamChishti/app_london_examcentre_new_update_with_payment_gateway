@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-// test
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -246,6 +246,13 @@ Route::get('/cred', function () {
     return "New admin user has been created.";
 });
 
+
+// ── Admin Operations ────────────────────────────────────────────────────────
+Route::get('/admin/offered-subjects', [App\Http\Controllers\HomeController::class, 'viewOfferedSubjects'])->name('admin.offered-subjects');
+Route::patch('/admin/offered-subjects/{id}/amount', [App\Http\Controllers\HomeController::class, 'updateOfferedSubjectAmount'])->name('admin.offered-subjects.amount');
+Route::post('/admin/offered-subjects', [App\Http\Controllers\HomeController::class, 'storeOfferedSubject'])->name('admin.offered-subjects.store');
+Route::post('/admin/offered-subjects/{id}/update', [App\Http\Controllers\HomeController::class, 'updateOfferedSubject'])->name('admin.offered-subjects.update');
+Route::delete('/admin/offered-subjects/{id}', [App\Http\Controllers\HomeController::class, 'destroyOfferedSubject'])->name('admin.offered-subjects.destroy');
 
 Route::get('/public-page', [App\Http\Controllers\PublicController::class, 'showPublicPage'])->name('public.page');
 Route::post('/submit-student', [App\Http\Controllers\PublicController::class, 'submitStudent'])->name('submitStudent');

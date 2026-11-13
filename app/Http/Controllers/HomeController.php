@@ -6870,4 +6870,125 @@ EOD;
 
         return response($body, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
     }
+
+    // ── Admin Operations ─────────────────────────────────────────────────────
+    public function viewOfferedSubjects(Request $request)    {
+        // Populate all dropdowns directly from offered_subjects table
+        // so dropdown values always exactly match the stored data
+        $sessions       = OfferedSubject::select('session')->distinct()
+                            ->whereNotNull('session')
+                            ->orderBy('session')
+                            ->pluck('session');
+
+        $boards         = OfferedSubject::select('examboard')->distinct()
+                            ->orderBy('examboard')
+                            ->pluck('examboard');
+
+        $qualifications = OfferedSubject::select('qualification')->distinct()
+                            ->orderBy('qualification')
+                            ->pluck('qualification');
+
+        // Build board → qualifications mapping for JS dependent dropdown
+        $boardQualMap = OfferedSubject::select('examboard', 'qualification')
+                            ->distinct()
+                            ->orderBy('examboard')
+                            ->orderBy('qualification')
+                            ->get()
+                            ->groupBy('examboard')
+                            ->map(fn($rows) => $rows->pluck('qualification')->values());
+
+        // Build session → boards mapping for JS dependent dropdown
+        $sessionBoardMap = OfferedSubject::select('session', 'examboard')
+                            ->distinct()
+                            ->whereNotNull('session')
+                            ->orderBy('session')
+                            ->orderBy('examboard')
+                            ->get()
+                            ->groupBy('session')
+                            ->map(fn($rows) => $rows->pluck('examboard')->values());
+
+        // Build session → board → qualifications mapping for full cascade
+        $sessionBoardQualMap = OfferedSubject::select('session', 'examboard', 'qualification')
+                            ->distinct()
+                            ->whereNotNull('session')
+                            ->orderBy('session')
+                            ->orderBy('examboard')
+                            ->orderBy('qualification')
+                            ->get()
+                            ->groupBy('session')
+                            ->map(fn($sessionRows) =>
+                                $sessionRows->groupBy('examboard')
+                                    ->map(fn($boardRows) => $boardRows->pluck('qualification')->values())
+                            );
+
+        $selectedSession  = $request->query('session', '');
+        $selectedBoard    = $request->query('board', '');
+        $selectedQual     = $request->query('qualification', '');
+
+        $query = OfferedSubject::query();
+
+        if ($selectedSession !== '')    $query->where('session',       $selectedSession);
+        if ($selectedBoard   !== '')    $query->where('examboard',     $selectedBoard);
+        if ($selectedQual    !== '')    $query->where('qualification', $selectedQual);
+
+        $subjects = $query->orderBy('examboard')->orderBy('qualification')->orderBy('description')->get();
+
+        return view('admin.offeredSubjects', compact(
+            'sessions', 'boards', 'qualifications', 'boardQualMap',
+            'sessionBoardMap', 'sessionBoardQualMap',
+            'subjects', 'selectedSession', 'selectedBoard', 'selectedQual'
+        ));
+    }
+
+    public function updateOfferedSubjectAmount(Request $request, $id)
+    {
+        $request->validate(['amount' => 'nullable|numeric|min:0']);
+
+        $subject = OfferedSubject::findOrFail($id);
+        $subject->amount = $request->input('amount') !== '' ? $request->input('amount') : null;
+        $subject->save();
+
+        return response()->json(['success' => true, 'amount' => $subject->amount]);
+    }
+
+    public function storeOfferedSubject(Request $request)
+    {
+        $data = $request->validate([
+            'examboard'     => 'required|string|max:100',
+            'qualification' => 'required|string|max:100',
+            'code'          => 'required|string|max:50',
+            'description'   => 'required|string|max:255',
+            'session'       => 'nullable|string|max:100',
+            'amount'        => 'nullable|numeric|min:0',
+        ]);
+
+        $subject = OfferedSubject::create($data);
+
+        return response()->json(['success' => true, 'subject' => $subject]);
+    }
+
+    public function updateOfferedSubject(Request $request, $id)
+    {
+        $data = $request->validate([
+            'examboard'     => 'required|string|max:100',
+            'qualification' => 'required|string|max:100',
+            'code'          => 'required|string|max:50',
+            'description'   => 'required|string|max:255',
+            'session'       => 'nullable|string|max:100',
+            'amount'        => 'nullable|numeric|min:0',
+        ]);
+
+        $subject = OfferedSubject::findOrFail($id);
+        $subject->update($data);
+
+        return response()->json(['success' => true, 'subject' => $subject]);
+    }
+
+    public function destroyOfferedSubject($id)
+    {
+        $subject = OfferedSubject::findOrFail($id);
+        $subject->delete();
+
+        return response()->json(['success' => true]);
+    }
 }
