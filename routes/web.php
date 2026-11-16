@@ -247,7 +247,180 @@ Route::get('/cred', function () {
 });
 
 
-// ── Admin Operations ────────────────────────────────────────────────────────
+// ── Option Codes Excel Import ────────────────────────────────────────────────
+Route::get('/tools/import-option-codes', function () {
+    return '
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Import Option Codes</title>
+        <style>
+            body { font-family: sans-serif; padding: 40px; max-width: 560px; margin: 0 auto; background: #f8f9fa; }
+            h2 { color: #1976D2; }
+            .card { background: #fff; border-radius: 8px; padding: 28px; box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+            label { display: block; font-weight: 600; margin-bottom: 6px; color: #333; }
+            input[type=file] { display: block; width: 100%; padding: 10px; border: 1px solid #ced4da;
+                border-radius: 6px; margin-bottom: 20px; background: #f8f9fa; box-sizing: border-box; }
+            .info { background: #e8f4fd; border-left: 4px solid #1976D2; padding: 10px 14px;
+                border-radius: 4px; font-size: 13px; color: #444; margin-bottom: 20px; }
+            .info strong { color: #1976D2; }
+            button { padding: 10px 28px; background: #1976D2; color: #fff; border: none;
+                border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+            button:hover { background: #1565C0; }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <h2>Import Option Codes</h2>
+            <div class="info">
+                <strong>Expected columns (Row 1 = header):</strong><br>
+                Col A: Specification Code &nbsp;|&nbsp; Col B: Entry Code &nbsp;|&nbsp; Col C: GCSE Subject<br>
+                Col D: Paper / Component &nbsp;|&nbsp; Col E: Component Code &nbsp;|&nbsp; Col F: Component Name<br>
+                Col G: Component Type &nbsp;|&nbsp; Col H: Selection Group
+            </div>
+            <form method="POST" action="/tools/import-option-codes" enctype="multipart/form-data">
+                ' . csrf_field() . '
+                <label>Select Excel File (.xlsx / .xls / .csv)</label>
+                <input type="file" name="excel_file" accept=".xlsx,.xls,.csv" required>
+                <button type="submit">Import to Database</button>
+            </form>
+        </div>
+    </body>
+    </html>';
+});
+
+Route::post('/tools/import-option-codes', function (Illuminate\Http\Request $request) {
+    $request->validate(['excel_file' => 'required|file|mimes:xlsx,xls,csv']);
+
+    $file = $request->file('excel_file');
+    $ext  = strtolower($file->getClientOriginalExtension());
+
+    $spreadsheet = $ext === 'csv'
+        ? \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Csv')->load($file->getRealPath())
+        : \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
+
+    $sheet   = $spreadsheet->getActiveSheet();
+    $highRow = $sheet->getHighestRow();
+
+    $inserted = 0;
+    $skipped  = 0;
+
+    for ($row = 2; $row <= $highRow; $row++) {
+        $specCode     = trim((string) $sheet->getCell('A' . $row)->getValue());
+        $entryCode    = trim((string) $sheet->getCell('B' . $row)->getValue());
+        $gcseSubject  = trim((string) $sheet->getCell('C' . $row)->getValue());
+        $paperComp    = trim((string) $sheet->getCell('D' . $row)->getValue());
+        $compCode     = trim((string) $sheet->getCell('E' . $row)->getValue());
+        $compName     = trim((string) $sheet->getCell('F' . $row)->getValue());
+        $compType     = trim((string) $sheet->getCell('G' . $row)->getValue());
+        $selectionGrp = trim((string) $sheet->getCell('H' . $row)->getValue());
+
+        if ($specCode === '' && $entryCode === '' && $gcseSubject === '') {
+            $skipped++;
+            continue;
+        }
+
+        \DB::table('option_codes')->insert([
+            'specification_code' => $specCode     ?: null,
+            'entry_code'         => $entryCode    ?: null,
+            'gcse_subject'       => $gcseSubject  ?: null,
+            'paper_component'    => $paperComp    ?: null,
+            'component_code'     => $compCode     ?: null,
+            'component_name'     => $compName     ?: null,
+            'component_type'     => $compType     ?: null,
+            'selection_group'    => $selectionGrp ?: null,
+            'created_at'         => now(),
+            'updated_at'         => now(),
+        ]);
+        $inserted++;
+    }
+
+    return '
+    <!DOCTYPE html>
+    <html>
+    <head><title>Import Result</title>
+    <style>
+        body { font-family: sans-serif; padding: 40px; max-width: 560px; margin: 0 auto; background: #f8f9fa; }
+        .card { background: #fff; border-radius: 8px; padding: 28px; box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+        .success { color: #28a745; font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+        .stat { font-size: 15px; margin: 8px 0; color: #444; }
+        .stat strong { color: #1976D2; }
+        a { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #1976D2;
+            color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px; }
+    </style>
+    </head>
+    <body>
+        <div class="card">
+            <div class="success">Import Successful!</div>
+            <div class="stat">Rows inserted: <strong>' . $inserted . '</strong></div>
+            <div class="stat">Rows skipped (empty): <strong>' . $skipped . '</strong></div>
+            <a href="/tools/import-option-codes">Import Another File</a>
+        </div>
+    </body>
+    </html>';
+});
+
+// ── Excel Column Merger Utility ─────────────────────────────────────────────
+Route::get('/tools/merge-columns', function () {
+    return '
+    <!DOCTYPE html>
+    <html>
+    <head><title>Merge Columns C & D</title></head>
+    <body style="font-family:sans-serif;padding:40px;max-width:500px;margin:0 auto;">
+        <h2>Merge Excel Columns C + D</h2>
+        <p style="color:#555;">Upload karo → C aur D merge hokar D mein aajayega → Download milega.</p>
+        <form method="POST" action="/tools/merge-columns" enctype="multipart/form-data">
+            ' . csrf_field() . '
+            <input type="file" name="excel_file" accept=".xlsx,.xls,.csv" required
+                style="display:block;margin-bottom:16px;padding:8px;border:1px solid #ccc;border-radius:4px;width:100%;">
+            <button type="submit"
+                style="padding:10px 24px;background:#1976D2;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;">
+                Merge & Download
+            </button>
+        </form>
+    </body>
+    </html>';
+});
+
+Route::post('/tools/merge-columns', function (Illuminate\Http\Request $request) {
+    $request->validate(['excel_file' => 'required|file|mimes:xlsx,xls,csv']);
+
+    $file = $request->file('excel_file');
+    $ext  = strtolower($file->getClientOriginalExtension());
+
+    $spreadsheet = $ext === 'csv'
+        ? \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Csv')->load($file->getRealPath())
+        : \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
+
+    $sheet   = $spreadsheet->getActiveSheet();
+    $highRow = $sheet->getHighestRow();
+
+    // Step 1: Row 1 header — set C1 to 'description', then delete D column
+    $sheet->getCell('C1')->setValue('description');
+
+    // Step 2: For each data row, merge C+D into C, then delete D column later
+    for ($row = 2; $row <= $highRow; $row++) {
+        $c = trim((string) $sheet->getCell('C' . $row)->getValue());
+        $d = trim((string) $sheet->getCell('D' . $row)->getValue());
+
+        $merged = ($c !== '' && $d !== '') ? $c . ' ' . $d : ($c !== '' ? $c : $d);
+
+        $sheet->getCell('C' . $row)->setValue($merged);
+    }
+
+    // Step 3: Delete column D entirely — all subsequent columns shift left
+    $sheet->removeColumnByIndex(4); // column index 4 = D (1-based)
+
+    $writer   = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $filename = 'merged_' . date('Ymd_His') . '.xlsx';
+
+    return response()->streamDownload(function () use ($writer) {
+        $writer->save('php://output');
+    }, $filename, [
+        'Content-Type'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+    ]);
+});
 Route::get('/admin/offered-subjects', [App\Http\Controllers\HomeController::class, 'viewOfferedSubjects'])->name('admin.offered-subjects');
 Route::patch('/admin/offered-subjects/{id}/amount', [App\Http\Controllers\HomeController::class, 'updateOfferedSubjectAmount'])->name('admin.offered-subjects.amount');
 Route::post('/admin/offered-subjects', [App\Http\Controllers\HomeController::class, 'storeOfferedSubject'])->name('admin.offered-subjects.store');
@@ -256,6 +429,11 @@ Route::delete('/admin/offered-subjects/{id}', [App\Http\Controllers\HomeControll
 
 Route::get('/public-page', [App\Http\Controllers\PublicController::class, 'showPublicPage'])->name('public.page');
 Route::post('/submit-student', [App\Http\Controllers\PublicController::class, 'submitStudent'])->name('submitStudent');
+Route::get('/payment/success', [App\Http\Controllers\StripeCheckoutController::class, 'success'])->name('stripe.success');
+Route::get('/payment/cancel/{reference}', [App\Http\Controllers\StripeCheckoutController::class, 'cancel'])->name('stripe.cancel');
+Route::post('/stripe/webhook', [App\Http\Controllers\StripeCheckoutController::class, 'webhook'])
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
+    ->name('stripe.webhook');
 Route::get('import-offered-subjects', [App\Http\Controllers\PublicController::class, 'showImportForm'])->name('showImportForm');
 Route::get('import-datesheet-subjects', [App\Http\Controllers\PublicController::class, 'showImportFormDatesheet'])->name('showImportFormDatesheet');
 Route::post('submit-import-offered-subjects', [App\Http\Controllers\PublicController::class, 'submitOffered'])->name('submitOffered');

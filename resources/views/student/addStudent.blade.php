@@ -513,9 +513,6 @@
                                 </div>
                             </aside>
                         </div>
-                        <div class="lec-feature-strip">
-                            <span><i class="fas fa-check-circle"></i>Multiple qualifications</span><span><i class="fas fa-layer-group"></i>Optional tier selection</span><span><i class="fas fa-file-alt"></i>NEA options</span><span><i class="fas fa-pound-sign"></i>Transparent pricing</span><span><i class="fas fa-shield-alt"></i>Secure online payment</span>
-                        </div>
                         <div id="lecBasketInputs" style="display:none;"></div>
                     </section>
 
@@ -1118,6 +1115,7 @@
 
             // Qualification, board and subject data supplied by the controller.
         const subjectsBySession = @json($subjectsBySession);
+        const optionCodesMap    = @json($optionCodesMap);
                 let sessionData = {};
         const sessionSelect = document.getElementById('session');
         const qualificationSelect = document.getElementById('lecQualification');
@@ -1163,6 +1161,7 @@
             qualificationSelect.disabled = !this.value || qualifications.length === 0;
             subjectSelect.disabled = true;
             subjectCodeSelect.disabled = true;
+            updateOptionCodes('');
             updateSelectedSubject();
         });
 
@@ -1179,12 +1178,14 @@
             });
             subjectSelect.disabled = !this.value;
             subjectCodeSelect.disabled = !this.value || subjectCodeSelect.options.length <= 1;
+            updateOptionCodes('');
             updateSelectedSubject();
         });
 
         subjectSelect.addEventListener('change', function () {
             const details = sessionData.subjectsByQualificationAndBoard?.[qualificationSelect.value]?.[boardSelect.value]?.[this.value];
             subjectCodeSelect.value = details?.code ? String(details.code) : '';
+            updateOptionCodes(details?.code ? String(details.code) : '');
             updateSelectedSubject();
         });
 
@@ -1192,8 +1193,30 @@
             const subjects = sessionData.subjectsByQualificationAndBoard?.[qualificationSelect.value]?.[boardSelect.value] || {};
             const match = Object.keys(subjects).find(subject => String(subjects[subject]?.code ?? '') === this.value);
             if (match) subjectSelect.value = match;
+            updateOptionCodes(this.value);
             updateSelectedSubject();
         });document.querySelectorAll('input[name="lecTier"], input[name="lecNea"]').forEach(input => input.addEventListener('change', updateSelectedSubject));
+
+        // ── Option Code dropdown logic ──────────────────────────────────────
+        const optionCodeSelect  = document.getElementById('lecOptionCode');
+        const optionCodeWrapper = optionCodeSelect ? optionCodeSelect.closest('div') : null;
+
+        function updateOptionCodes(specCode) {
+            if (!optionCodeSelect || !optionCodeWrapper) return;
+            resetSelect(optionCodeSelect, 'Select option code');
+            const codes = (specCode && optionCodesMap[String(specCode)]) ? optionCodesMap[String(specCode)] : [];
+            if (codes.length > 0) {
+                codes.forEach(c => optionCodeSelect.add(new Option(c, c)));
+                optionCodeSelect.disabled = false;
+                optionCodeWrapper.style.display = '';
+            } else {
+                optionCodeSelect.disabled = true;
+                optionCodeWrapper.style.display = 'none';
+            }
+        }
+
+        // Hide option code on page load
+        if (optionCodeWrapper) optionCodeWrapper.style.display = 'none';
 
         function getSelectedDetails() {
             const qualification = qualificationSelect.value;
@@ -1562,26 +1585,35 @@
                     contentType: false,
                     success: function(response) {
                         Swal.close();
+
+                        // Start Stripe Checkout when the backend returns its hosted URL.
+                        if (response && response.checkout_url) {
+                            window.location.assign(response.checkout_url);
+                            return;
+                        }
+
+                        // Access Arrangements are saved for manual Exams Team review.
+                        if (response && response.manual_review) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Request received',
+                                text: response.message || 'The Exams Team will contact you.',
+                                confirmButtonColor: '#57afbfd6',
+                                confirmButtonText: 'OK'
+                            });
+                            submitButton.prop('disabled', false);
+                            return;
+                        }
+
+                        // Do not show a false success message if Checkout was not created.
                         Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Your form has been successfully submitted. Our team will contact you very soon.',
+                            icon: 'error',
+                            title: 'Checkout not started',
+                            text: (response && response.message) || 'The server did not return a Stripe Checkout link. No payment has been taken.',
                             confirmButtonColor: '#57afbfd6',
                             confirmButtonText: 'OK'
-                        }).then(() => {
-                            form.reset();
-                            isRowAdded = false;
-                            $('.appendSec').empty();
-                            $('#additionalDocsContainer').html('');
-                            $('#additionalDocsContainer').append(createDocumentRow(false));
-                            if (window.parent !== window) {
-                                window.parent.postMessage({
-                                    type: 'formSubmission',
-                                    status: 'success',
-                                    message: 'Form submitted successfully'
-                                }, '*');
-                            }
                         });
+                        submitButton.prop('disabled', false);
                     },
                     error: function(xhr) {
                         Swal.close();

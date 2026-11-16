@@ -263,9 +263,20 @@ class HomeController extends Controller
             ->get()
             ->groupBy('session');
 
+        // Build specification_code → entry_codes[] map from option_codes table
+        $optionCodesMap = \DB::table('option_codes')
+            ->select('specification_code', 'entry_code')
+            ->whereNotNull('specification_code')
+            ->whereNotNull('entry_code')
+            ->distinct()
+            ->get()
+            ->groupBy('specification_code')
+            ->map(fn($rows) => $rows->pluck('entry_code')->unique()->values());
+
         $data = [
             'sessions' => $sessions,
             'activeSession' => $activeSession,
+            'optionCodesMap' => $optionCodesMap,
             'subjectsBySession' => $subjectsData->map(function ($sessionSubjects) {
                 return [
                     'boards' => $sessionSubjects->pluck('examBoard')->unique()->values(),

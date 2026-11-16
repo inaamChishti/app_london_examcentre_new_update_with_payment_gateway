@@ -68,9 +68,20 @@ class PublicController extends Controller
             ->get()
             ->groupBy('session');
 
+        // Build specification_code → entry_codes[] map from option_codes table
+        $optionCodesMap = \DB::table('option_codes')
+            ->select('specification_code', 'entry_code')
+            ->whereNotNull('specification_code')
+            ->whereNotNull('entry_code')
+            ->distinct()
+            ->get()
+            ->groupBy('specification_code')
+            ->map(fn($rows) => $rows->pluck('entry_code')->unique()->values());
+
         $data = [
             'sessions' => $sessions,
             'activeSession' => $activeSession,
+            'optionCodesMap' => $optionCodesMap,
             'subjectsBySession' => $subjectsData->map(function ($sessionSubjects) {
                 return [
                     'boards' => $sessionSubjects->pluck('examBoard')->unique()->values(),
@@ -107,21 +118,103 @@ class PublicController extends Controller
 
   public function submitStudent(Request $request)
     {
-        $request->validate([
-            'session' => 'required|string',
+        // Validate the submitted basket against the server-side exam catalogue.
+        // Never trust prices or exam combinations sent by the browser.
+        $validator = Validator::make($request->all(), [
+            'session' => 'required|string|exists:sessions,session_name',
             'examBoard' => 'required|array|min:1',
-            'examBoard.*' => 'required|string',
+            'examBoard.*' => 'required|string|max:255',
             'courseType' => 'required|array|min:1',
-            'courseType.*' => 'required|string',
+            'courseType.*' => 'required|string|max:255',
             'subjectName' => 'required|array|min:1',
-            'subjectName.*' => 'required|string',
+            'subjectName.*' => 'required|string|max:255',
             'subjectCode' => 'required|array|min:1',
-            'subjectCode.*' => 'required|string',
+            'subjectCode.*' => 'required|string|max:100',
             'tire' => 'required|array|min:1',
-            'tire.*' => 'required|string',
+            'tire.*' => 'required|in:N/A,Foundation Tier,Higher Tier',
             'nea' => 'required|array|min:1',
-            'nea.*' => 'required|string',
+            'nea.*' => "required|in:N/A,Carry Forward,Frobel's NEA",
         ]);
+
+        $validator->after(function ($validator) use ($request) {
+            $boards = $request->input('examBoard', []);
+            $qualifications = $request->input('courseType', []);
+            $subjects = $request->input('subjectName', []);
+            $codes = $request->input('subjectCode', []);
+            $tiers = $request->input('tire', []);
+            $neas = $request->input('nea', []);
+
+            if (!is_string($request->input('session'))) {
+                $validator->errors()->add('session', 'Please select a valid exam session.');
+                return;
+            }
+
+            foreach ([$boards, $qualifications, $subjects, $codes, $tiers, $neas] as $basketField) {
+                if (!is_array($basketField)) {
+                    $validator->errors()->add('basket', 'Your exam basket data is invalid. Please select your exams again.');
+                    return;
+                }
+            }
+
+            $count = count($boards);
+
+            if (
+                $count < 1 ||
+                count($qualifications) !== $count ||
+                count($subjects) !== $count ||
+                count($codes) !== $count ||
+                count($tiers) !== $count ||
+                count($neas) !== $count
+            ) {
+                $validator->errors()->add('basket', 'Your exam basket is incomplete. Please remove the selections and add them again.');
+                return;
+            }
+
+            $seen = [];
+            foreach ($boards as $index => $board) {
+                if (
+                    !isset($qualifications[$index], $subjects[$index], $codes[$index], $tiers[$index], $neas[$index]) ||
+                    !is_string($board) ||
+                    !is_string($qualifications[$index] ?? null) ||
+                    !is_string($subjects[$index] ?? null) ||
+                    !is_string($codes[$index] ?? null)
+                ) {
+                    $validator->errors()->add('basket', 'Your exam basket rows do not match. Please select your exams again.');
+                    continue;
+                }
+
+                $key = implode('|', [
+                    $request->input('session'),
+                    $board,
+                    $qualifications[$index],
+                    $subjects[$index],
+                    $codes[$index],
+                ]);
+
+                if (isset($seen[$key])) {
+                    $validator->errors()->add('basket', 'The same exam cannot be added to the basket more than once.');
+                    continue;
+                }
+                $seen[$key] = true;
+
+                $offering = OfferedSubject::query()
+                    ->where('session', $request->input('session'))
+                    ->where('examboard', $board)
+                    ->where('qualification', $qualifications[$index])
+                    ->where('description', $subjects[$index])
+                    ->where('code', $codes[$index])
+                    ->first();
+
+                if (!$offering || !is_numeric($offering->amount) || (float) $offering->amount <= 0) {
+                    $validator->errors()->add(
+                        "subjectCode.{$index}",
+                        'One of your selected exams is not available for this session or does not have an approved price.'
+                    );
+                }
+            }
+        });
+
+        $validator->validate();
         // dd($request->all());
         $activeSession = Session::where('status', 'active')->first();
         $basePath = public_path('studentDocs');
@@ -163,7 +256,7 @@ class PublicController extends Controller
             }
         }
 
-        StudentRequest::create([
+        $studentRequest = StudentRequest::create([
             'current_domain' => $request->current_domain ?? null,
             'surname' => $request->surname,
             'first_name' => $request->firstName,
@@ -200,7 +293,9 @@ class PublicController extends Controller
             'form_filling_date' => $request->formFillDate,
         ]);
 
-      
+        // New online booking flow: create a server-priced Stripe Checkout session.
+        return app(\App\Http\Controllers\StripeCheckoutController::class)->start($studentRequest->id, $request);
+
         try {
             $candidateName = $request->firstName . ' ' . $request->surname; // Combine first name and surname
             $emailBody = '
