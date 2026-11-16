@@ -1206,7 +1206,8 @@
             resetSelect(optionCodeSelect, 'Select option code');
             const codes = (specCode && optionCodesMap[String(specCode)]) ? optionCodesMap[String(specCode)] : [];
             if (codes.length > 0) {
-                codes.forEach(c => optionCodeSelect.add(new Option(c, c)));
+                // Display only the alphabetic suffix (e.g. 8145AA -> AA) while preserving the full code as the submitted value.
+                codes.forEach(c => optionCodeSelect.add(new Option(String(c).replace(/^\d+/, ''), c)));
                 optionCodeSelect.disabled = false;
                 optionCodeWrapper.style.display = '';
             } else {

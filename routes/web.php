@@ -276,7 +276,7 @@ Route::get('/tools/import-option-codes', function () {
                 <strong>Expected columns (Row 1 = header):</strong><br>
                 Col A: Specification Code &nbsp;|&nbsp; Col B: Entry Code &nbsp;|&nbsp; Col C: GCSE Subject<br>
                 Col D: Paper / Component &nbsp;|&nbsp; Col E: Component Code &nbsp;|&nbsp; Col F: Component Name<br>
-                Col G: Component Type &nbsp;|&nbsp; Col H: Selection Group
+                Col G: Component Type &nbsp;|&nbsp; Col H: Selection Group &nbsp;|&nbsp; Col I: Board &nbsp;|&nbsp; Col J: Qualifications
             </div>
             <form method="POST" action="/tools/import-option-codes" enctype="multipart/form-data">
                 ' . csrf_field() . '
@@ -314,6 +314,8 @@ Route::post('/tools/import-option-codes', function (Illuminate\Http\Request $req
         $compName     = trim((string) $sheet->getCell('F' . $row)->getValue());
         $compType     = trim((string) $sheet->getCell('G' . $row)->getValue());
         $selectionGrp = trim((string) $sheet->getCell('H' . $row)->getValue());
+        $board        = trim((string) $sheet->getCell('I' . $row)->getValue());
+        $qualification = trim((string) $sheet->getCell('J' . $row)->getValue());
 
         if ($specCode === '' && $entryCode === '' && $gcseSubject === '') {
             $skipped++;
@@ -321,14 +323,16 @@ Route::post('/tools/import-option-codes', function (Illuminate\Http\Request $req
         }
 
         \DB::table('option_codes')->insert([
-            'specification_code' => $specCode     ?: null,
-            'entry_code'         => $entryCode    ?: null,
-            'gcse_subject'       => $gcseSubject  ?: null,
-            'paper_component'    => $paperComp    ?: null,
-            'component_code'     => $compCode     ?: null,
-            'component_name'     => $compName     ?: null,
-            'component_type'     => $compType     ?: null,
-            'selection_group'    => $selectionGrp ?: null,
+            'specification_code' => $specCode      ?: null,
+            'entry_code'         => $entryCode     ?: null,
+            'gcse_subject'       => $gcseSubject   ?: null,
+            'paper_component'    => $paperComp     ?: null,
+            'component_code'     => $compCode      ?: null,
+            'component_name'     => $compName      ?: null,
+            'component_type'     => $compType      ?: null,
+            'selection_group'    => $selectionGrp  ?: null,
+            'board'              => $board         ?: null,
+            'qualification'      => $qualification ?: null,
             'created_at'         => now(),
             'updated_at'         => now(),
         ]);
