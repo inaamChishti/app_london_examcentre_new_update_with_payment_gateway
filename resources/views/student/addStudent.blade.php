@@ -1293,7 +1293,7 @@
 
             basketInputs.innerHTML = '';
             basket.forEach(item => {
-                [['examBoard[]',item.board],['courseType[]',item.qualification],['subjectName[]',item.subject],['subjectCode[]',item.code,'subject-code'],['tire[]',item.tier],['nea[]',item.nea]].forEach(([name,value,className]) => {
+                [['examBoard[]',item.board],['courseType[]',item.qualification],['subjectName[]',item.subject],['subjectCode[]',item.code,'subject-code'],['optionCode[]',item.optionCode ?? ''],['tire[]',item.tier],['nea[]',item.nea]].forEach(([name,value,className]) => {
                     const input = document.createElement('input');
                     input.type = 'hidden';
                     input.name = name;

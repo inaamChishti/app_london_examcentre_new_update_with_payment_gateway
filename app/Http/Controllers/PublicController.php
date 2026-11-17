@@ -280,6 +280,7 @@ class PublicController extends Controller
             'course_type' => $request->courseType,
             'subject_name' => $request->subjectName,
             'subject_code' => $request->subjectCode,
+            'option_code' => $request->optionCode ?? null,
             'tire' => $request->tire,
             'nea' => $request->nea,
             'photo_path' => $photoPath,

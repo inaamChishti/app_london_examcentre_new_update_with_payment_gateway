@@ -1419,7 +1419,7 @@
 
             basketInputs.innerHTML = '';
             basket.forEach(item => {
-                [['examBoard[]',item.board],['courseType[]',item.qualification],['subjectName[]',item.subject],['subjectCode[]',item.code,'subject-code'],['tire[]',item.tier],['nea[]',item.nea]].forEach(([name,value,className]) => {
+                [['examBoard[]',item.board],['courseType[]',item.qualification],['subjectName[]',item.subject],['subjectCode[]',item.code,'subject-code'],['optionCode[]',item.optionCode ?? ''],['tire[]',item.tier],['nea[]',item.nea]].forEach(([name,value,className]) => {
                     const input = document.createElement('input');
                     input.type = 'hidden';
                     input.name = name;
@@ -1442,7 +1442,8 @@
             }
             const rawAmount = selected.amount;
             const amount = rawAmount === null || rawAmount === '' || !Number.isFinite(Number(rawAmount)) ? null : Number(rawAmount);
-            basket.push({ ...selected, amount, tier:document.querySelector('input[name="lecTier"]:checked')?.value || 'N/A', nea:document.querySelector('input[name="lecNea"]:checked')?.value || 'N/A' });
+            const selectedOptionCode = optionCodeSelect && optionCodeSelect.value ? optionCodeSelect.value : null;
+            basket.push({ ...selected, amount, optionCode: selectedOptionCode, tier:document.querySelector('input[name="lecTier"]:checked')?.value || 'N/A', nea:document.querySelector('input[name="lecNea"]:checked')?.value || 'N/A' });
             renderBasket();
             // Reload board options from the currently selected session.
             loadSessionOptions();
