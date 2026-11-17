@@ -22,6 +22,9 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\EmailLogHelper;
+use App\Services\SubjectQueryService;
+use App\Services\AQA_GCSE_ReligiousStudies;
+use App\Services\AQA_GCSE_General;
 
 
 class HomeController extends Controller
@@ -1932,9 +1935,15 @@ class HomeController extends Controller
 //         }
 //     }
 
+
+
+
+
+
+
  public function getTimetableSubjs(Request $request)
     {
-        // dd($request->all());
+       
         $activeSession = Session::where('status', 'active')->first();
 
         if (!$activeSession) {
@@ -1945,6 +1954,7 @@ class HomeController extends Controller
         $courseType = $request->input('courseType');
         $subjectName = $request->input('subjectName');
         $subjectCode = $request->input('subjectCode');
+        $optCode     = $request->input('optionCode');
 
         if (!empty($subjectCode)) {
             // Extract the base code (part before any /, space, or -, and remove F or H)
@@ -2014,145 +2024,21 @@ class HomeController extends Controller
                             $query->whereIn('subjectCode', ['3320U10-1', '3320U20-1']);
                         }
                     } else {
-                        // dd('2');
+                       
+                            // else
+                            //     {
+                                    
+                            //          $query->whereRaw("REGEXP_REPLACE(subjectCode, '/.*|-.*| .*', '') = ?", [$baseCode])
+                            //         ->where('subjectCode', 'LIKE', '%' . $tier);
+                            //     }
+                            
+                       
                         // dd($baseCode,$tier, $examBoard, $courseType);
 
-
-                             if($examBoard == 'AQA' && $courseType =='GCSE' && $baseCode == '8463')
-                            {
-
-                                  $query->whereIn('subjectCode', ['8463/1F', '8463/1H','8463/2F','8463/2H']);
-                                //   dd($query->get());
-                            }
-                            else
-                                {
-
-                              if($examBoard == 'AQA' && $courseType =='GCSE' && $baseCode == '8462')
-                            {
-                                    // dd('');
-                                    $query->whereIn('subjectCode', ['8462/1F', '8462/1H','8462/2F','8462/2H']);
-                            }
-                            else{
-
-                            if($examBoard == 'AQA' && $courseType =='GCSE' && $baseCode == '8461')
-                                {
- $query->whereIn('subjectCode', ['8461/1F', '8461/1H','8461/2F','8461/2H']);
-                                }else{
-                                    if($baseCode == '8638')
-                                    {
-                                        $query->whereIn('subjectCode', ["8638/LF", "8638/LH", "8638/RF", "8638/RH", "8638/SF", "8638/SH", "8638/WF", "8638/WH"]);
-                                    }else{
-                                        if($baseCode == '8673')
-                                    {
-                                        $query->whereIn('subjectCode', ["8673/LF", "8673/LF", "8673/RF", "8673/RH", "8673/SF", "8673/SH", "8673/WF", "8673/WH"]);
-                                    }
-                                    else
-                                    {
-                                         if($baseCode == '8465')
-                                    {
-                                        $query->whereIn('subjectCode', ["8465/1F", "8465/1H", "8465/2F", "8465/2H", "8465/3F", "8465/3H", "8465/4F", "8465/4H"]);
-                                    }
-                                    else
-                                    {
-                                         if($baseCode == '8652')
-                                    {
-                                        $query->whereIn('subjectCode', ["8652/LF", "8652/LH", "8652/RF", "8652/RH", "8652/SF", "8652/SH", "8652/WF", "8652/WH"]);
-                                    }
-                                    else
-                                    {
-                                         if($baseCode == '8662')
-                                    {
-                                        $query->whereIn('subjectCode', ["8662/SF", "8662/SH", "8662/LF", "8662/LH", "8662/RF", "8662/RH", "8662/WF", "8662/WH"]);
-                                    }
-                                    else
-                                    {
-                                        if($baseCode == '8633')
-                                    {
-                                        $query->whereIn('subjectCode', ["8633/LF", "8633/LH", "8633/RF", "8633/RH", "8633/SF", "8633/SH", "8633/WF", "8633/WH"]);
-                                    }else
-                                    {
-                                         if($baseCode == '8678')
-                                    {
-                                        $query->whereIn('subjectCode', ["8678/LF", "8678/LH", "8678/RF", "8678/RH", "8678/SF", "8678/SH", "8678/WF", "8678/WH"]);
-                                    }
-                                    else
-                                    {
-                                         if($baseCode == '8683')
-                                    {
-                                        $query->whereIn('subjectCode', ["8683/LF", "8683/LH", "8683/RF", "8683/RH", "8683/SF", "8683/SH", "8683/WF", "8683/WH"]);
-                                    }
-                                    else
-                                    {
-                                         if($baseCode == '8688')
-                                    {
-                                        $query->whereIn('subjectCode', ["8688/SF", "8688/SH", "8688/LF", "8688/LH", "8688/RF", "8688/RH", "8688/WF", "8688/WH"]);
-                                    }
-                                    else
-                                    {
-                                         if($baseCode == '8692')
-                                    {
-                                        $query->whereIn('subjectCode', ["8692/LF", "8692/LH", "8692/RF", "8692/RH", "8692/SF", "8692/SH", "8692/WF", "8692/WH"]);
-                                    }else
-                                    {
-                                        if($baseCode == '8382')
-                                    {
-                                        $query->whereIn('subjectCode', ["8382/1F", "8382/1H", "8382/2F", "8382/2H"]);
-                                    }else
-                                    {
-                                        if($baseCode == '8648')
-                                    {
-                                        $query->whereIn('subjectCode', ["8648/LF", "8648/LH", "8648/RF", "8648/RH", "8648/SF", "8648/SH", "8648/WF", "8648/WH"]);
-                                    }else
-                                    {
-                                         $query->whereRaw("REGEXP_REPLACE(subjectCode, '/.*|-.*| .*', '') = ?", [$baseCode])
-                                    ->where('subjectCode', 'LIKE', '%' . $tier);
-                                    }
-                                       
-                                    }
-                                        
-                                    }
-                                         
-                                    }
-                                        
-                                    }
-                                        
-                                    }
-                                        
-                                    }
-                                           
-                                    }
-                                             
-                                    }
-                                        // dd($subjectCode,$baseCode);
-                                        
-                                    }
-                                       
-                                    }
-                                        
-                                            
-                                    }
- 
-                                }
-
-
-                            }
-
-
-                                }
-
-                        // dd($query->ge/t());
+                 
                     }
                 } else {
-                    // dd('');
-                    // dd($baseCode, $tier, $examBoard, $courseType, $subjectCode);
-
-
-                    //     if ($examBoard == 'Pearson' && $courseType == 'International A-Level' && $subjectCode == '')
-                    //     {
-                    //         dd($examBoard, $courseType, $subjectCode);
-                    //         $this->process_Pearson_international_A_Level($examBoard, $courseType, $subjectCode);
-                    //     }
-
+                   
                     // Pearson Papers IGCSE 4WAC logic start select paper based on frst 4 letters/chars
                     if ($examBoard === 'Pearson' && $courseType === 'International GCSE' && substr($baseCode, 0, 4) === '4WAC') {
                         $query = $this->searchSubjectsByCode($examBoard, $courseType, $baseCode, $query);
@@ -2190,23 +2076,20 @@ class HomeController extends Controller
                     } elseif ($examBoard === 'Pearson' && $courseType === 'International GCSE' && substr($baseCode, 0, 4) === '4CP0') {
                         $query = $this->SpecialDirectFunction($examBoard, $courseType, $baseCode, $query);
                     } elseif ($examBoard === 'Pearson' && $courseType === 'International GCSE' && substr($baseCode, 0, 4) === '4MA1') {
-                        // in_array($lastChar = substr($subjectCode, -1), ['F', 'H']) ? $query->where('subjectCode', 'LIKE', '%' . $lastChar) : $query->where(function ($q) use ($baseCode) {
-                        //     $baseCode = substr($baseCode, 0, 3);
-                        //     $q->where('subjectCode', 'LIKE', $baseCode . '%')->orWhere('subjectCode', 'LIKE', $baseCode . '/%')->orWhere('subjectCode', 'LIKE', $baseCode . ' %')->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                        // });
+                      
                          $lastChar = substr(trim($subjectCode), -1); // F or H
 
-    if ($lastChar === 'F') {
-        // dd('1');
-        // Only Foundation papers
-        $query->whereIn('subjectCode', ['4MA1 1F', '4MA1 2F']);
-    } elseif ($lastChar === 'H') {
-        // Only Higher papers
-        $query->whereIn('subjectCode', ['4MA1 1H', '4MA1 2H']);
-    } else {
-        // If no F/H, return nothing or skip
-        $query->whereRaw('1 = 0'); // return no results
-    }
+                    if ($lastChar === 'F') {
+                        // dd('1');
+                        // Only Foundation papers
+                        $query->whereIn('subjectCode', ['4MA1 1F', '4MA1 2F']);
+                    } elseif ($lastChar === 'H') {
+                        // Only Higher papers
+                        $query->whereIn('subjectCode', ['4MA1 1H', '4MA1 2H']);
+                    } else {
+                        // If no F/H, return nothing or skip
+                        $query->whereRaw('1 = 0'); // return no results
+                    }
                     } elseif ($examBoard === 'WJEC/EDUQAS' && $courseType === 'GCSE' && strlen($subjectCode) > 4) {
                         
                        
@@ -2243,266 +2126,284 @@ class HomeController extends Controller
                         } else {
                             // dd($examBoard,$courseType,$baseCode);
 
-                                 
-                           
-                            $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                                // dd($query->get());
+                            // AQA GCSE Computer Science 8525A/B/C - handled via switch case below, skip LIKE here
+                            if ($examBoard == 'AQA' && $courseType == 'GCSE' && in_array($subjectCode, ['8525A', '8525B', '8525C'])) {
+                                // do nothing here - switch case below will apply the correct whereIn
+                            } else {
+                                $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    // dd($query->get());
 
-                            // dd('2');
+                                // dd('2');
+                            }
 
                         }
                     }
                 }
             });
 
+
+
+
+             if($examBoard == 'AQA' && $courseType =='GCSE')
+                                
+                            {
+                                // dd($subjectCode);
+                               
+                                $query = AQA_GCSE_General::apply($query, $subjectCode);
+
+
+                                if ($subjectCode == '8145') {
+                                    $query = SubjectQueryService::applyOptionCodeFilter($query, $subjectCode, $optCode);
+                                }
+
+                                if ($subjectCode === '8062') {
+                                    $query = AQA_GCSE_ReligiousStudies::apply($query, $optCode);
+                                }
+
+                                if ($subjectCode === '8063') {
+                                    $query = AQA_GCSE_ReligiousStudies::applyB($query, $optCode);
+                                }
+                                
+                            }
+
             // dd($examBoard,$courseType,$baseCode);
- if ($examBoard === "AQA" && ($courseType === "A Level" || $courseType === "AS Level")) {
-  $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-}
+                    if ($examBoard === "AQA" && ($courseType === "A Level" || $courseType === "AS Level")) {
+                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                    }
 
- if ($examBoard === "Pearson" && $courseType === "AS Level" && $baseCode === "8RS0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ['8RS0 01', '8RS0 02', '8RS0 03', '8RS0 4A-4F']);
+                    if ($examBoard === "Pearson" && $courseType === "AS Level" && $baseCode === "8RS0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ['8RS0 01', '8RS0 02', '8RS0 03', '8RS0 4A-4F']);
 
-            }   
+                                }   
 
- if ($examBoard === "Pearson" && $courseType === "A Level" && $baseCode === "9RS0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ['9RS0 01', '9RS0 02', '9RS0 03', '9RS0 4A-4F']);
+                    if ($examBoard === "Pearson" && $courseType === "A Level" && $baseCode === "9RS0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ['9RS0 01', '9RS0 02', '9RS0 03', '9RS0 4A-4F']);
 
-            }    
+                                }    
 
-             if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1AA0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1AA0 1F", "1AA0 1H", "1AA0 3F", "1AA0 3H", "1AA0 4F", "1AA0 4H"]);
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1AA0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1AA0 1F", "1AA0 1H", "1AA0 3F", "1AA0 3H", "1AA0 4F", "1AA0 4H"]);
 
-            }    
-                // dd($examBoard,$courseType,$baseCode);
-             if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1BI0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1BIO 1F", "1BIO 1H", "1BIO 2F", "1BIO 2H"]);
+                                }    
+                                    // dd($examBoard,$courseType,$baseCode);
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1BI0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1BIO 1F", "1BIO 1H", "1BIO 2F", "1BIO 2H"]);
 
-            }    
-            
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1CN0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1CN0 1F", "1CN0 1H", "1CN0 3F", "1CN0 3H", "1CN0 4F", "1CN0 4H"]);
+                                }    
+                                
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1CN0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1CN0 1F", "1CN0 1H", "1CN0 3F", "1CN0 3H", "1CN0 4F", "1CN0 4H"]);
 
-            }  
-            
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1SC0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1SC0 1BF", "1SC0 1BH", "1SC0 1CF", "1SC0 1CH", "1SC0 1PF", "1SC0 1PH", "1SC0 2BF", "1SC0 2BH", "1SC0 2CF", "1SC0 2CH", "1SC0 2PF", "1SC0 2PH"]);
+                                }  
+                                
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1SC0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1SC0 1BF", "1SC0 1BH", "1SC0 1CF", "1SC0 1CH", "1SC0 1PF", "1SC0 1PH", "1SC0 2BF", "1SC0 2BH", "1SC0 2CF", "1SC0 2CH", "1SC0 2PF", "1SC0 2PH"]);
 
-            }  
+                                }  
 
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1DT0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1DT0 1A", "1DT0 1B", "1DT0 1C", "1DT0 1D", "1DT0 1E", "1DT0 1F"]);
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1DT0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1DT0 1A", "1DT0 1B", "1DT0 1C", "1DT0 1D", "1DT0 1E", "1DT0 1F"]);
 
-            }  
-
-
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1FR1") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1FR1 2F", "1FR1 2H", "1FR1 3F", "1FR1 3H", "1FR1 4F", "1FR1 4H"]);
-
-            } 
-            
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1GN1") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1GN1 2F", "1GN1 2H", "1GN1 3F", "1GN1 3H", "1GN1 4F", "1GN1 4H"]);
-
-            } 
+                                }  
 
 
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1GK0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1GK0 1F", "1GK0 1H", "1GK0 3F", "1GK0 3H", "1GK0 4F", "1GK0 4H"]);
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1FR1") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1FR1 2F", "1FR1 2H", "1FR1 3F", "1FR1 3H", "1FR1 4F", "1FR1 4H"]);
 
-            } 
+                                } 
+                                
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1GN1") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1GN1 2F", "1GN1 2H", "1GN1 3F", "1GN1 3H", "1GN1 4F", "1GN1 4H"]);
 
-
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1IN0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1IN0 1F", "1IN0 1H", "1IN0 3F", "1IN0 3H", "1IN0 4F", "1IN0 4H"]);
-
-            } 
-
-
-              if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1JA0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1JA0 1F", "1JA0 1H", "1JA0 3F", "1JA0 3H", "1JA0 4F", "1JA0 4H"]);
-
-            } 
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1PN0") {
-                // dd($examBoard,$courseType,$baseCode);
-              
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ["1PNO 1F", "1PNO 1H", "1PNO 3F", "1PNO 3H", "1PNO 4F", "1PNO 4H"]);
-
-            } 
-
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1PG0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode',["1PG0 1F", "1PG0 1H", "1PG0 3F", "1PG0 3H", "1PG0 4F", "1PG0 4H"]);
-
-            } 
-
-               if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1RU0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode',["1RU0 1F", "1RU0 1H", "1RU0 3F", "1RU0 3H", "1RU0 4F", "1RU0 4H"]);
-
-            } 
-
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1SP1") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode',["1SP1 2F", "1SP1 2H", "1SP1 3F", "1SP1 3H", "1SP1 4F", "1SP1 4H"]);
-
-            } 
-
-               if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1ST0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode',["1ST0 1F", "1ST0 1H", "1ST0 2F", "1ST0 2H"]);
-
-            } 
+                                } 
 
 
-             if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1TU0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode',["1TU0 1F", "1TU0 1H", "1TU0 3F", "1TU0 3H", "1TU0 4F", "1TU0 4H"]);
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1GK0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1GK0 1F", "1GK0 1H", "1GK0 3F", "1GK0 3H", "1GK0 4F", "1GK0 4H"]);
 
-            } 
+                                } 
 
 
-             if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1UR0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode',["1UR0 1F", "1UR0 1H", "1UR0 3F", "1UR0 3H", "1UR0 4F", "1UR0 4H"]);
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1IN0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1IN0 1F", "1IN0 1H", "1IN0 3F", "1IN0 3H", "1IN0 4F", "1IN0 4H"]);
 
-            } 
+                                } 
 
-          
 
-             if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1GU0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode',["1GU0 1F", "1GU0 1H", "1GU0 3F", "1GU0 3H", "1GU0 4F", "1GU0 4H"]);
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1JA0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1JA0 1F", "1JA0 1H", "1JA0 3F", "1JA0 3H", "1JA0 4F", "1JA0 4H"]);
 
-            } 
+                                } 
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1PN0") {
+                                    // dd($examBoard,$courseType,$baseCode);
+                                
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ["1PNO 1F", "1PNO 1H", "1PNO 3F", "1PNO 3H", "1PNO 4F", "1PNO 4H"]);
 
-              
+                                } 
 
-            // Pehla case: 1CH0 ke liye
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1CH0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                  $query->whereIn('subjectCode', ['1CH0 1F', '1CH0 1H', '1CH0 2F', '1CH0 2H']);
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1PG0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode',["1PG0 1F", "1PG0 1H", "1PG0 3F", "1PG0 3H", "1PG0 4F", "1PG0 4H"]);
 
-            }
+                                } 
 
-            // Doosra case: 1PH0 ke liye
-            if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1PH0") {
-                 $query->where('subjectCode', 'LIKE', $baseCode . '%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-                                ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1RU0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode',["1RU0 1F", "1RU0 1H", "1RU0 3F", "1RU0 3H", "1RU0 4F", "1RU0 4H"]);
 
-                  $query->whereIn('subjectCode', ['1PH0 1F', '1PH0 1H', '1PH0 2F', '1PH0 2H']);
-            }
+                                } 
 
-            // Central static block: 4WM1 / 4WM2 Pearson International GCSE Maths — tier-wise only
-            if ($examBoard === "Pearson" && $courseType === "International GCSE" && (strpos($subjectCode, '4WM1F') !== false || strpos($subjectCode, '4WM1H') !== false || strpos($subjectCode, '4WM2F') !== false || strpos($subjectCode, '4WM2H') !== false || $baseCode === '4WM1' || $baseCode === '4WM2')) {
-                $hasF = strpos($subjectCode, 'F') !== false;
-                $hasH = strpos($subjectCode, 'H') !== false;
-                if ($hasF) {
-                    $query->whereIn('subjectCode', ['4WM1F 01', '4WM2F 01']);
-                } elseif ($hasH) {
-                    $query->whereIn('subjectCode', ['4WM1H 01', '4WM2H 01']);
-                }
-            }
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1SP1") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode',["1SP1 2F", "1SP1 2H", "1SP1 3F", "1SP1 3H", "1SP1 4F", "1SP1 4H"]);
+
+                                } 
+
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1ST0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode',["1ST0 1F", "1ST0 1H", "1ST0 2F", "1ST0 2H"]);
+
+                                } 
+
+
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1TU0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode',["1TU0 1F", "1TU0 1H", "1TU0 3F", "1TU0 3H", "1TU0 4F", "1TU0 4H"]);
+
+                                } 
+
+
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1UR0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode',["1UR0 1F", "1UR0 1H", "1UR0 3F", "1UR0 3H", "1UR0 4F", "1UR0 4H"]);
+
+                                } 
+
+                            
+
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1GU0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode',["1GU0 1F", "1GU0 1H", "1GU0 3F", "1GU0 3H", "1GU0 4F", "1GU0 4H"]);
+
+                                } 
+
+                                
+
+                                // Pehla case: 1CH0 ke liye
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1CH0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+                                    $query->whereIn('subjectCode', ['1CH0 1F', '1CH0 1H', '1CH0 2F', '1CH0 2H']);
+
+                                }
+
+                                // Doosra case: 1PH0 ke liye
+                                if ($examBoard === "Pearson" && $courseType === "GCSE" && $baseCode === "1PH0") {
+                                    $query->where('subjectCode', 'LIKE', $baseCode . '%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
+                                                    ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
+
+                                    $query->whereIn('subjectCode', ['1PH0 1F', '1PH0 1H', '1PH0 2F', '1PH0 2H']);
+                                }
+
+                                // Central static block: 4WM1 / 4WM2 Pearson International GCSE Maths — tier-wise only
+                                if ($examBoard === "Pearson" && $courseType === "International GCSE" && (strpos($subjectCode, '4WM1F') !== false || strpos($subjectCode, '4WM1H') !== false || strpos($subjectCode, '4WM2F') !== false || strpos($subjectCode, '4WM2H') !== false || $baseCode === '4WM1' || $baseCode === '4WM2')) {
+                                    $hasF = strpos($subjectCode, 'F') !== false;
+                                    $hasH = strpos($subjectCode, 'H') !== false;
+                                    if ($hasF) {
+                                        $query->whereIn('subjectCode', ['4WM1F 01', '4WM2F 01']);
+                                    } elseif ($hasH) {
+                                        $query->whereIn('subjectCode', ['4WM1H 01', '4WM2H 01']);
+                                    }
+                                }
 
               if ($examBoard === 'Cambridge OCR' && $courseType === 'L3 CERTIFICATE') {
-
-               
-                 
                                  $query->where('subjectCode', 'LIKE', $baseCode . '%')
                                 ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
                                 ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
                                 ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                            
-                            
-                    
-
-                        // dd('');
-                           
-
              }
 
             //  dd($examBoard,$courseType,$baseCode);
@@ -2557,46 +2458,6 @@ class HomeController extends Controller
              }
 
 
-            // if ($examBoard === 'WJEC/EDUQAS' && $courseType === 'GCSE') {
-            //     // dd($subjectCode);
-            //     // dd($activeSession->session_name);
-
-            //     $query = Subjects::select('subjectName', 'subjectCode')
-            //         ->where('examBoard', $examBoard)
-            //         ->where('courseType', $courseType)
-            //         ->where('examSession', session('current_session'));
-
-            //     if ($subjectCode === 'C300H' || $subjectCode === 'C300UB0-1H' || $subjectCode === 'C300UA0-1H') {
-            //         $query->where(function ($q) {
-            //             $q->where('subjectCode', 'C300UA0-1H')
-            //                 ->orWhere('subjectCode', 'C300UB0-1H');
-            //         });
-            //     } elseif ($subjectCode === 'C300F' || $subjectCode === 'C300U10-1F' || $subjectCode === 'C300U20-1F') {
-            //         $query->where(function ($q) {
-            //             $q->where('subjectCode', 'C300U10-1F')
-            //                 ->orWhere('subjectCode', 'C300U20-1F');
-            //         });
-            //     } elseif ($subjectCode === 'C700U20-1') {
-            //         $query->where(function ($q) {
-            //             $q->where('subjectCode', 'C700U20-1');
-            //         });
-            //     } elseif ($subjectCode === 'C700U10-1') {
-            //         $query->where(function ($q) {
-            //             $q->where('subjectCode', 'C700U10-1');
-            //         });
-            //     }
-            // }
-
-             // for summer 2027 start
-            // if($examBoard === 'AQA' && $courseType === 'A Level' ||  $courseType === 'AS Level' )
-            //  {
-            //       $query->where('subjectCode', 'LIKE', $baseCode . '%')
-            //                      ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
-            //                      ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
-            //                      ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-
-            //  }
-
              if ($examBoard === 'WJEC/EDUQAS' && $courseType === 'International GCSE') {
                 // dd($subjectCode);
                 // dd($activeSession->session_name);
@@ -2650,36 +2511,36 @@ class HomeController extends Controller
 
             if ($examBoard === 'Pearson' && $courseType === 'Functional Skills') {
     
-    // Base query setup
-    $query = Subjects::select('subjectName', 'subjectCode')
-        ->where('examBoard', $examBoard)
-        ->where('courseType', $courseType)
-        ->where('examSession', session('current_session'));
-            // dd($subjectCode);
-    // Separate check for each of the 10 subject codes
-    if ($subjectCode === 'FSM EL1') {
-        $query->where('subjectCode', 'FSM EL1');
-    } elseif ($subjectCode === 'FSM EL2') {
-        $query->where('subjectCode', 'FSM EL2');
-    } elseif ($subjectCode === 'FSM EL3') {
-        $query->where('subjectCode', 'FSM EL3');
-    } elseif ($subjectCode === 'FSM L1') {
-        $query->where('subjectCode', 'FSM L1');
-    } elseif ($subjectCode === 'FSM L2') {
-        $query->where('subjectCode', 'FSM L2');
-    } elseif ($subjectCode === 'FSE EL1') {
-        $query->where('subjectCode', 'FSE EL1');
-    } elseif ($subjectCode === 'FSE EL2') {
-        $query->where('subjectCode', 'FSE EL2');
-    } elseif ($subjectCode === 'FSE EL3') {
-        $query->where('subjectCode', 'FSE EL3');
-    } elseif ($subjectCode === 'FSE L1') {
-        $query->where('subjectCode', 'FSE L1');
-    } elseif ($subjectCode === 'FSE L2') {
-        $query->where('subjectCode', 'FSE L2');
-    }
-}
-// dd($examBoard,$courseType,$baseCode);
+                // Base query setup
+                $query = Subjects::select('subjectName', 'subjectCode')
+                    ->where('examBoard', $examBoard)
+                    ->where('courseType', $courseType)
+                    ->where('examSession', session('current_session'));
+                        // dd($subjectCode);
+                // Separate check for each of the 10 subject codes
+                if ($subjectCode === 'FSM EL1') {
+                    $query->where('subjectCode', 'FSM EL1');
+                } elseif ($subjectCode === 'FSM EL2') {
+                    $query->where('subjectCode', 'FSM EL2');
+                } elseif ($subjectCode === 'FSM EL3') {
+                    $query->where('subjectCode', 'FSM EL3');
+                } elseif ($subjectCode === 'FSM L1') {
+                    $query->where('subjectCode', 'FSM L1');
+                } elseif ($subjectCode === 'FSM L2') {
+                    $query->where('subjectCode', 'FSM L2');
+                } elseif ($subjectCode === 'FSE EL1') {
+                    $query->where('subjectCode', 'FSE EL1');
+                } elseif ($subjectCode === 'FSE EL2') {
+                    $query->where('subjectCode', 'FSE EL2');
+                } elseif ($subjectCode === 'FSE EL3') {
+                    $query->where('subjectCode', 'FSE EL3');
+                } elseif ($subjectCode === 'FSE L1') {
+                    $query->where('subjectCode', 'FSE L1');
+                } elseif ($subjectCode === 'FSE L2') {
+                    $query->where('subjectCode', 'FSE L2');
+                }
+            }
+            // dd($examBoard,$courseType,$baseCode);
 
             $exams = $query->get();
             // dd($exams);
@@ -2690,14 +2551,17 @@ class HomeController extends Controller
             })->toArray();
 
             return response()->json([
-                'exams' => $examsList
+                'exams' => $examsList,
+                'optionCode' => $request->input('optionCode', null),
             ]);
         } else {
             return response()->json([
-                'exams' => null
+                'exams' => null,
+                'optionCode' => $request->input('optionCode', null),
             ]);
         }
     }
+
 
     
     private function searchSubjectsByCodeMathsTier($examBoard, $courseType, $subjectCode, $query)

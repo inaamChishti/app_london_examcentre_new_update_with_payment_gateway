@@ -1436,14 +1436,19 @@
                 Swal.fire({ icon:'warning', title:'Choose an exam', text:'Please select a qualification, exam board and subject first.', confirmButtonColor:'#1e60a7' });
                 return;
             }
-            if (basket.some(item => item.board === selected.board && item.qualification === selected.qualification && item.subject === selected.subject)) {
+            const currentOptionCode = optionCodeWrapper && optionCodeWrapper.style.display !== 'none' ? (optionCodeSelect?.value || null) : null;
+            if (basket.some(item => item.board === selected.board && item.qualification === selected.qualification && item.subject === selected.subject && item.optionCode === currentOptionCode)) {
                 Swal.fire({ icon:'info', title:'Already in basket', text:'This subject has already been added to your basket.', confirmButtonColor:'#1e60a7' });
+                return;
+            }
+            if (optionCodeWrapper && optionCodeWrapper.style.display !== 'none' && (!optionCodeSelect || !optionCodeSelect.value)) {
+                Swal.fire({ icon:'warning', title:'Option code required', text:'Please select an option code before adding this subject to your basket.', confirmButtonColor:'#1e60a7' });
+                optionCodeSelect.focus();
                 return;
             }
             const rawAmount = selected.amount;
             const amount = rawAmount === null || rawAmount === '' || !Number.isFinite(Number(rawAmount)) ? null : Number(rawAmount);
-            const selectedOptionCode = optionCodeSelect && optionCodeSelect.value ? optionCodeSelect.value : null;
-            basket.push({ ...selected, amount, optionCode: selectedOptionCode, tier:document.querySelector('input[name="lecTier"]:checked')?.value || 'N/A', nea:document.querySelector('input[name="lecNea"]:checked')?.value || 'N/A' });
+            basket.push({ ...selected, amount, optionCode: currentOptionCode, tier:document.querySelector('input[name="lecTier"]:checked')?.value || 'N/A', nea:document.querySelector('input[name="lecNea"]:checked')?.value || 'N/A' });
             renderBasket();
             // Reload board options from the currently selected session.
             loadSessionOptions();

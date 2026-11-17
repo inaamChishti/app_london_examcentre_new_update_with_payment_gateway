@@ -396,6 +396,9 @@
                                     $subjectCodes = is_string($request->subject_code)
                                         ? json_decode($request->subject_code, true)
                                         : $request->subject_code ?? [];
+                                    $optionCodes = is_string($request->option_code)
+                                        ? json_decode($request->option_code, true)
+                                        : $request->option_code ?? [];
                                     $neas = is_string($request->nea)
                                         ? json_decode($request->nea, true)
                                         : $request->nea ?? [];
@@ -434,6 +437,8 @@
                                             </select>
                                             <input type="hidden" class="subject-code" name="subjectCode[]"
                                                 value="{{ $preSelectedSubjects[$index]['code'] }}" readonly>
+                                            <input type="hidden" class="option-code" name="optionCode[]"
+                                                value="{{ $optionCodes[$index] ?? '' }}">
                                         </td>
                                         <td>
                                             <select class="form-select exams" name="exams[{{ $index }}][]"
@@ -827,13 +832,16 @@
             const courseType = row.querySelector('.course-type').value;
             const subjectName = row.querySelector('.subject-name').value;
             const subjectCode = row.querySelector('.subject-code').value;
+            const optionCodeInput = row.querySelector('.option-code');
+            const optionCode = optionCodeInput ? optionCodeInput.value : '';
             const examsSelect = row.querySelector('.exams');
 
             const url = '{{ url('/get-timetable-subjs') }}' +
                 `?examBoard=${encodeURIComponent(examBoard)}` +
                 `&courseType=${encodeURIComponent(courseType)}` +
                 `&subjectName=${encodeURIComponent(subjectName)}` +
-                `&subjectCode=${encodeURIComponent(subjectCode)}`;
+                `&subjectCode=${encodeURIComponent(subjectCode)}` +
+                `&optionCode=${encodeURIComponent(optionCode)}`;
 
             fetch(url, {
                     method: 'GET',

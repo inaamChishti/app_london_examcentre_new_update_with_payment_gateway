@@ -183,12 +183,14 @@ class PublicController extends Controller
                     continue;
                 }
 
+                $optionCodes = $request->input('optionCode', []);
                 $key = implode('|', [
                     $request->input('session'),
                     $board,
                     $qualifications[$index],
                     $subjects[$index],
                     $codes[$index],
+                    $optionCodes[$index] ?? '',
                 ]);
 
                 if (isset($seen[$key])) {
