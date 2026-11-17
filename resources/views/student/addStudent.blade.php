@@ -1316,7 +1316,8 @@
             }
             const rawAmount = selected.amount;
             const amount = rawAmount === null || rawAmount === '' || !Number.isFinite(Number(rawAmount)) ? null : Number(rawAmount);
-            basket.push({ ...selected, amount, tier:document.querySelector('input[name="lecTier"]:checked')?.value || 'N/A', nea:document.querySelector('input[name="lecNea"]:checked')?.value || 'N/A' });
+            const selectedOptionCode = optionCodeSelect && optionCodeSelect.value ? optionCodeSelect.value : null;
+            basket.push({ ...selected, amount, optionCode: selectedOptionCode, tier:document.querySelector('input[name="lecTier"]:checked')?.value || 'N/A', nea:document.querySelector('input[name="lecNea"]:checked')?.value || 'N/A' });
             renderBasket();
             // Reload board options from the currently selected session.
             loadSessionOptions();
