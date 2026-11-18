@@ -17,7 +17,7 @@ class SubjectQueryService
      */
     public static function applyOptionCodeFilter(Builder $query, string $subjectCode, string $optCode): Builder
     {
-        if ($subjectCode === '8145') {
+         if (preg_match('/^8145(\/|$)/', $subjectCode)) {
             return self::AQA_GCSE_HISTORY($query, $optCode);
         }
 
@@ -31,7 +31,7 @@ class SubjectQueryService
     private static function AQA_GCSE_HISTORY(Builder $query, string $optCode): Builder
     {
         $cleanOpt = preg_replace('/\d+/', '', $optCode);
-
+       
         switch ($cleanOpt) {
             case 'AA': $query->whereIn('subjectCode', ['8145/1A/A', '8145/1B/A', '8145/2A/A', '8145/2B/A']); break;
             case 'AB': $query->whereIn('subjectCode', ['8145/1A/A', '8145/1B/A', '8145/2A/A', '8145/2B/B']); break;

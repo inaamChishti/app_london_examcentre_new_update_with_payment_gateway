@@ -1958,10 +1958,25 @@ class HomeController extends Controller
         $subjectName = $request->input('subjectName');
         $subjectCode = $request->input('subjectCode');
         $optCode     = $request->input('optionCode');
-
+                                // dd($optCode);
         if (!empty($subjectCode)) {
             // Extract the base code (part before any /, space, or -, and remove F or H)
             $baseCode = preg_replace('/[\/\s-].*$|[FH]$/', '', $subjectCode);
+
+            // Option code: prefer the value sent from the frontend (the edit-request flow
+            // sources it from student_requests). When the frontend did NOT send optionCode
+            // at all (the modify-approved-student flow, whose blade has no optionCode input),
+            // pick the option_code stored for this subject from the student_details table.
+            if ($request->missing('optionCode')) {
+                $optCode = StudentDetail::where('exam_session', session('current_session'))
+                    ->where('subject_code', $subjectCode)
+                    ->whereNotNull('option_code')
+                    ->orderBy('id', 'desc')
+                    ->value('option_code');
+            }
+
+            // Always keep $optCode as a string so the option-code filters never receive null.
+            $optCode = is_string($optCode) ? $optCode : '';
 
 
             // Determine if subjectCode contains F or H for tier filtering
@@ -2153,21 +2168,24 @@ class HomeController extends Controller
              if($examBoard == 'AQA' && $courseType =='GCSE')
                                 
                             {
-                                // dd($subjectCode);
+                                dd($subjectCode);
                                
                                 $query = AQA_GCSE_General::apply($query, $subjectCode);
 
 
                                
-                                if ($subjectCode == '8145') {
+                                if (preg_match('/^8145(\/|$)/', $subjectCode)) {
+                                    
                                     $query = SubjectQueryService::applyOptionCodeFilter($query, $subjectCode, $optCode);
                                 }
-
-                                if ($subjectCode == '8062') {
+                                        // dd($subjectCode);
+                                // if ($subjectCode == '8062') {
+                                     if (preg_match('/^8062(\/|$)/', $subjectCode)) {
                                     $query = AQA_GCSE_ReligiousStudies::apply($query, $optCode);
                                 }
 
-                                if ($subjectCode == '8063') {
+                                // if ($subjectCode == '8063') {
+                                     if (preg_match('/^8063(\/|$)/', $subjectCode)) {
                                     $query = AQA_GCSE_ReligiousStudies::applyB($query, $optCode);
                                 }
                                 
@@ -2713,6 +2731,7 @@ class HomeController extends Controller
                 'course_type' => $firstExam->course_type,
                 'subject_name' => $firstExam->subject_name,
                 'subject_code' => $firstExam->subject_code,
+                'option_code' => $firstExam->option_code,
                 'tire' => $firstExam->tire ?? 'N/A',
                 'nea' => $firstExam->nea ?? 'N/A',
                 'exams' => $examList,
@@ -3064,6 +3083,7 @@ class HomeController extends Controller
 
             $subjectName = $request->subjectName[$index] ?? null;
             $subjectCode = $request->subjectCode[$index] ?? null;
+            $optionCode = $request->optionCode[$index] ?? null;
 
             // Fetch exam details from Subjects table
             $subjectDetails = Subjects::where('examSession', session('current_session'))->where('subjectCode', $subjectCode)
@@ -3119,6 +3139,7 @@ class HomeController extends Controller
                     'course_type' => $courseType,
                     'subject_name' => $examName,
                     'subject_code' => $examCode,
+                    'option_code' => $optionCode ?: null,
                     'exams' => json_encode($request->exams),
                     'day' => $examDay,
                     'time' => $examTime,

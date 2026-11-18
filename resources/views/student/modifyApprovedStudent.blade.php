@@ -355,6 +355,7 @@
                                             <option value="{{ $exam['subject_name'] }}" selected>{{ $exam['subject_name'] }}</option>
                                         </select>
                                         <input type="hidden" class="subject-code" name="subjectCode[]" value="{{ $exam['subject_code'] }}" readonly>
+                                        <input type="hidden" class="option-code" name="optionCode[]" value="{{ $exam['option_code'] ?? '' }}">
                                     </td>
                                     <td>
                                         <select class="form-select exams" name="exams[{{ $index }}][]" multiple>
@@ -683,13 +684,15 @@ function fetchExamsData(row, index) {
     const courseType = row.querySelector('.course-type').value;
     const subjectName = row.querySelector('.subject-name').value;
     const subjectCode = row.querySelector('.subject-code').value;
+    const optionCode = row.querySelector('.option-code')?.value || '';
     const examsSelect = row.querySelector('.exams');
 
     const url = '{{ url("/get-timetable-subjs") }}' +
         `?examBoard=${encodeURIComponent(examBoard)}` +
         `&courseType=${encodeURIComponent(courseType)}` +
         `&subjectName=${encodeURIComponent(subjectName)}` +
-        `&subjectCode=${encodeURIComponent(subjectCode)}`;
+        `&subjectCode=${encodeURIComponent(subjectCode)}` +
+        `&optionCode=${encodeURIComponent(optionCode)}`;
 
     fetch(url, {
         method: 'GET',
@@ -804,6 +807,7 @@ function fetchExamsData(row, index) {
                 <td>
                     <select class="form-select subject-name" name="subjectName[]"><option value="">Select Subject</option></select>
                     <input type="hidden" class="subject-code" name="subjectCode[]" value="">
+                    <input type="hidden" class="option-code" name="optionCode[]" value="">
                 </td>
                 <td><select class="form-select exams" name="exams[${rowCount}][]" multiple></select></td>
                 <td><select class="form-select tire" name="tire[]"><option value="N/A">N/A</option><option value="Foundation Tier">Foundation Tier</option><option value="Higher Tier">Higher Tier</option></select></td>
