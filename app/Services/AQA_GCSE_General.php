@@ -20,7 +20,10 @@ class AQA_GCSE_General
         // dd($subjectCode);
         switch ($subjectCode) {
             case '8638F': 
-            case '8638/LF': 
+            case '8638/LF':
+            case '8638/SF':
+            case '8638/WF': 
+            case '8638/RF':
                 $query->whereIn('subjectCode', ['8638/LF', '8638/SF', '8638/RF', '8638/WF']); 
                 break;
             case '8638H': 
@@ -85,15 +88,15 @@ class AQA_GCSE_General
 
             case '8525A': 
             case '8525/1A': 
-                $query->whereIn('subjectCode', ['8525/1A', '8525/2']); 
+                $query->whereIn('subjectCode', ['8525/1A','8525/1B','8525/1C', '8525/2']); 
                 break;
             case '8525B': 
             case '8525/1B': 
-                $query->whereIn('subjectCode', ['8525/1B', '8525/2']); 
+               $query->whereIn('subjectCode', ['8525/1A','8525/1B','8525/1C', '8525/2']); 
                 break;
             case '8525C': 
             case '8525/1C': 
-                $query->whereIn('subjectCode', ['8525/1C', '8525/2']); 
+              $query->whereIn('subjectCode', ['8525/1A','8525/1B','8525/1C', '8525/2']); 
                 break;
 
             case '8136': 

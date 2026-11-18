@@ -2168,7 +2168,7 @@ class HomeController extends Controller
              if($examBoard == 'AQA' && $courseType =='GCSE')
                                 
                             {
-                                dd($subjectCode);
+                                // dd($subjectCode);
                                
                                 $query = AQA_GCSE_General::apply($query, $subjectCode);
 
