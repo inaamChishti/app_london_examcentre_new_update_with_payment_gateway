@@ -1328,6 +1328,7 @@ class HomeController extends Controller
             'course_type' => json_encode($request->courseType),
             'subject_name' => json_encode($request->subjectName),
             'subject_code' => json_encode($request->subjectCode),
+            'option_code' => json_encode($request->optionCode ?? []),
             'exams' => json_encode($request->exams),
             'tire' => json_encode($request->tire),
             'nea' => json_encode($request->nea),
@@ -1372,6 +1373,7 @@ class HomeController extends Controller
             // Fetch subjectName and subjectCode directly from the request for this index
             $subjectName = $request->subjectName[$index] ?? null;
             $subjectCode = $request->subjectCode[$index] ?? null;
+            $optionCode = $request->optionCode[$index] ?? null;
 
             // Query the Subject model to get exam details based on subjectCode
 
@@ -1432,6 +1434,7 @@ class HomeController extends Controller
                     'course_type' => $courseType,
                     'subject_name' => $examName, // Specific exam name
                     'subject_code' => $examCode, // Specific exam code
+                    'option_code' => $optionCode, // Option code for the relevant paper(s) in this row
                     'exams' => json_encode($request->exams),
                     'day' => $examDay,
                     'time' => $examTime,
@@ -2155,15 +2158,16 @@ class HomeController extends Controller
                                 $query = AQA_GCSE_General::apply($query, $subjectCode);
 
 
+                               
                                 if ($subjectCode == '8145') {
                                     $query = SubjectQueryService::applyOptionCodeFilter($query, $subjectCode, $optCode);
                                 }
 
-                                if ($subjectCode === '8062') {
+                                if ($subjectCode == '8062') {
                                     $query = AQA_GCSE_ReligiousStudies::apply($query, $optCode);
                                 }
 
-                                if ($subjectCode === '8063') {
+                                if ($subjectCode == '8063') {
                                     $query = AQA_GCSE_ReligiousStudies::applyB($query, $optCode);
                                 }
                                 

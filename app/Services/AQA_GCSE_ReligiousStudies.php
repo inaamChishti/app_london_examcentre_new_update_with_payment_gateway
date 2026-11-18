@@ -61,10 +61,21 @@ class AQA_GCSE_ReligiousStudies
         $cleanOpt = preg_replace('/\d+/', '', $optCode);
 
         switch ($cleanOpt) {
-        case 'XA': $query->whereIn('subjectCode', ['8063/1', '8063/2X', '8063/2A']); break;
-        case 'XB': $query->whereIn('subjectCode', ['8063/1', '8063/2X', '8063/2B']); break;
-        case 'YA': $query->whereIn('subjectCode', ['8063/1', '8063/2Y', '8063/2A']); break;
-        case 'YB': $query->whereIn('subjectCode', ['8063/1', '8063/2Y', '8063/2B']); break;
+            case 'XA': 
+            case '8063XA': // Agar full code bhi match karna ho ya jo pattern ho
+                $query->whereIn('subjectCode', ['8063/1', '8063/2X', '8063/2A']); 
+                break;
+            case 'XB': 
+                $query->whereIn('subjectCode', ['8063/1', '8063/2X', '8063/2B']); 
+                break;
+            case 'YA': 
+                $query->whereIn('subjectCode', ['8063/1', '8063/2Y', '8063/2A']); 
+                break;
+            case 'YB': 
+                $query->whereIn('subjectCode', ['8063/1', '8063/2Y', '8063/2B']); 
+                break;
+            default:
+                break;
         }
 
         return $query;
