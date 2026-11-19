@@ -2056,6 +2056,7 @@ class HomeController extends Controller
                  
                     }
                 } else {
+                    
                    
                     // Pearson Papers IGCSE 4WAC logic start select paper based on frst 4 letters/chars
                     if ($examBoard === 'Pearson' && $courseType === 'International GCSE' && substr($baseCode, 0, 4) === '4WAC') {
@@ -2148,13 +2149,22 @@ class HomeController extends Controller
                             if ($examBoard == 'AQA' && $courseType == 'GCSE' && in_array($subjectCode, ['8525A', '8525B', '8525C'])) {
                                 // do nothing here - switch case below will apply the correct whereIn
                             } else {
-                                $query->where('subjectCode', 'LIKE', $baseCode . '%')
+
+                            //  dd($examBoard,$courseType,$baseCode);
+                             if ($examBoard === "AQA" && in_array($courseType, ["A-Level", "AS-level", "A Level", "AS Level"], true)) 
+                                {
+                                    
+                                }
+                                else
+                                    {
+                                        // dd('11');
+                                     $query->where('subjectCode', 'LIKE', $baseCode . '%')
                                     ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
                                     ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
                                     ->orWhere('subjectCode', 'LIKE', $baseCode . '-%');
-                                    // dd($query->get());
-
-                                // dd('2');
+                                    }
+                                
+                               
                             }
 
                         }
@@ -2191,7 +2201,7 @@ class HomeController extends Controller
                                 
                             }
 
-            // dd($examBoard,$courseType,$baseCode);
+           
                     if ($examBoard === "AQA" && ($courseType === "A Level" || $courseType === "AS Level")) {
                     $query->where('subjectCode', 'LIKE', $baseCode . '%')
                                                     ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
@@ -2449,6 +2459,7 @@ class HomeController extends Controller
 
                             }
                             else{
+                              
                                  $query->where('subjectCode', 'LIKE', $baseCode . '%')
                                 ->orWhere('subjectCode', 'LIKE', $baseCode . '/%')
                                 ->orWhere('subjectCode', 'LIKE', $baseCode . ' %')
